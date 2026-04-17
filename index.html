@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Image Prompt Builder Ver.2.8</title>
+    <title>ChatGPT Image Prompt Builder Ver.2.9</title>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <style>
         :root {
@@ -339,7 +339,7 @@
             font-family: monospace;
             font-size: 0.85rem;
             -webkit-user-select: text;
-            user-select: text;
+            user-select: text; 
         }
 
         .panel-controls {
@@ -383,7 +383,7 @@
 
     <div class="container">
         <header>
-            <h1>Prompt Builder v2.8</h1>
+            <h1>Prompt Builder v2.9</h1>
             <div class="header-buttons">
                 <a href="https://tashi-kusanose.github.io/stream_summary/" class="btn-header btn-back">まとめに戻る</a>
                 <button class="btn-header" onclick="showHelp(event, '使い方', '1. カテゴリをタップして設定（選択すると自動で閉じます）。<br>2. カテゴリを<b>長押し</b>して動かすと、上下左右に並び替え可能。<br>3. 一番下の「コピー」を押してChatGPTに貼り付け。')">使い方</button>
@@ -497,6 +497,8 @@
 
                     <div id="cat-body" class="category-content" style="display:none;">
                         <div class="grid-options">
+                            <label class="option-label"><input type="radio" name="bodyType" value="Maintain the body proportion and head-to-body ratio of the reference image." onchange="handleRadioSelect()"><div class="option-button"><span>参照画像のまま</span><button type="button" class="btn-item-help" onclick="showHelp(event, '参照画像のまま', 'アップロードされた参照画像の体型や頭身の比率を維持して描画します。')">?</button></div></label>
+
                             <label class="option-label"><input type="radio" name="bodyType" value="超ミニチュアのちびキャラ3Dフィギュアスタイル。極端な頭身比率（約2.5頭身）で、頭が大きく体が非常に小さい。超デフォルメされた愛らしいデザインで、精巧なディテールを持つ。" onchange="handleRadioSelect()" checked><div class="option-button"><span>超ミニちびキャラ3D</span><button type="button" class="btn-item-help" onclick="showHelp(event, '超ミニちびキャラ3D', '極端に小さく、頭が大きい2.5頭身の超ミニチュアスタイルです。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="bodyType" value="日本のアニメスタイル（標準的な体型）" onchange="handleRadioSelect()"><div class="option-button"><span>日本のアニメキャラ</span><button type="button" class="btn-item-help" onclick="showHelp(event, '日本のアニメキャラ', '標準的な体型です。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="bodyType" value="八頭身以上のモデル体型" onchange="handleRadioSelect()"><div class="option-button"><span>八頭身モデル</span><button type="button" class="btn-item-help" onclick="showHelp(event, '八頭身モデル', '高頭身スタイルです。')">?</button></div></label>
@@ -514,7 +516,7 @@
                     <div id="cat-angle" class="category-content" style="display:none;">
                         <div class="grid-options">
                             <label class="option-label"><input type="radio" name="angle" value="真正面からのアングル" onchange="handleRadioSelect()"><div class="option-button"><span>正面</span><button type="button" class="btn-item-help" onclick="showHelp(event, '正面', '真正面の構図です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="ハイアングル（上からの俯瞰）" onchange="handleRadioSelect()"><div class="option-button"><span>ハイアングル(俯瞰)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '俯瞰', '上から見下ろす角度です。')">?</button></div></label>
+                            <label class="option-label"><input type="radio" name="angle" value="ハイアングル（上からの俯瞰）" onchange="handleRadioSelect()"><div class="option-button"><span>俯瞰</span><button type="button" class="btn-item-help" onclick="showHelp(event, '俯瞰', '上から見下ろす角度です。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="angle" value="ローアングル（下からの煽り）" onchange="handleRadioSelect()"><div class="option-button"><span>ローアングル(煽り)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '煽り', '下から見上げる角度です。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="angle" value="横顔（プロファイル）" onchange="handleRadioSelect()"><div class="option-button"><span>横顔</span><button type="button" class="btn-item-help" onclick="showHelp(event, '横顔', '横顔の構図です。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="angle" value="背面からのアングル（後ろ姿）" onchange="handleRadioSelect()"><div class="option-button"><span>背面(後ろ姿)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '背面', '後ろ姿の構図です。')">?</button></div></label>
@@ -555,7 +557,7 @@
                             <label class="option-label"><input type="radio" name="pose" value="自信ありげに腰に手を当てている" onchange="handleRadioSelect()"><div class="option-button"><span>腰に手を当てる</span><button type="button" class="btn-item-help" onclick="showHelp(event, '腰に手を当てる', '自信に満ちたポーズです。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="pose" value="胸の前で腕を組んでいる" onchange="handleRadioSelect()"><div class="option-button"><span>腕を組む</span><button type="button" class="btn-item-help" onclick="showHelp(event, '腕を組む', '強気な印象のポーズです。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="pose" value="カメラに向かって指を差している" onchange="handleRadioSelect()"><div class="option-button"><span>カメラを指差す</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'カメラを指差す', 'アピール力の高いポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="肩越しに振り返っている" onchange="handleRadioSelect()"><div class="option-button"><span>振り返る</span><button type="button" class="btn-item-help" onclick="showHelp(event, '振り返る', '背中を向けつつ振り向くポーズです。')">?</button></div></label>
+                            <label class="option-label"><input type="radio" name="pose" value="肩越しに振り返っている" onchange="handleRadioSelect()"><div class="option-button"><span>振り返る</span><button type="button" class="btn-item-help" onclick="showHelp(event, '振り返る', '背中を向けつつ振り返るポーズです。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="pose" value="にこやかに手を振っている" onchange="handleRadioSelect()"><div class="option-button"><span>手を振る</span><button type="button" class="btn-item-help" onclick="showHelp(event, '手を振る', '挨拶をする仕草です。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="pose" value="両手でハートマークを作っている" onchange="handleRadioSelect()"><div class="option-button"><span>手でハート</span><button type="button" class="btn-item-help" onclick="showHelp(event, '手でハート', '可愛らしいポーズです。')">?</button></div></label>
                             <label class="option-label"><input type="radio" name="pose" value="武器や小道具を構えている" onchange="handleRadioSelect()"><div class="option-button"><span>小道具を構える</span><button type="button" class="btn-item-help" onclick="showHelp(event, '小道具を構える', 'アイテムを手に戦闘態勢をとるポーズです。')">?</button></div></label>
