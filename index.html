@@ -1,843 +1,834 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Image Prompt Builder Ver.2.9</title>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-    <style>
-        :root {
-            --bg-color: #0f1115;
-            --card-bg: #1a1d24;
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --border-color: #374151;
-            --radius: 12px;
-            --transition: all 0.2s ease-in-out;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>TikTok LIVE バトルアイテム所持数メモ</title>
+  <style>
+    :root {
+      --bg-1: #120724;
+      --bg-2: #261048;
+      --card: rgba(255, 255, 255, 0.1);
+      --card-strong: rgba(255, 255, 255, 0.16);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --pink: #ff4fd8;
+      --cyan: #27f5ff;
+      --danger: #ff5e7a;
+      --line: rgba(255, 255, 255, 0.18);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+      --radius: 22px;
+      --tap: 48px;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 15px;
-            line-height: 1.6;
-            -webkit-user-select: none;
-            user-select: none; 
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255, 79, 216, 0.32), transparent 32%),
+        radial-gradient(circle at 92% 8%, rgba(39, 245, 255, 0.28), transparent 28%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2) 55%, #090512);
+      padding: max(16px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom));
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+    .app {
+      width: min(980px, 100%);
+      margin: 0 auto;
+    }
 
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+    header {
+      padding: 20px 8px 14px;
+      text-align: center;
+    }
 
-        h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            background: linear-gradient(to right, #a855f7, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+    }
 
-        .header-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap; 
-            justify-content: flex-end;
-        }
+    h1 {
+      margin: 12px 0 8px;
+      font-size: clamp(28px, 7vw, 52px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      text-shadow: 0 0 24px rgba(255, 79, 216, 0.42);
+    }
 
-        .btn-header {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: bold;
-            transition: var(--transition);
-            text-decoration: none; 
-            display: inline-flex; 
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-header:hover {
-            background: var(--primary);
-            color: #fff;
-        }
+    .lead {
+      margin: 0 auto;
+      max-width: 640px;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.55;
+      font-size: 14px;
+    }
 
-        .btn-back {
-            background: rgba(236, 72, 153, 0.1);
-            color: #ec4899;
-            border-color: #ec4899;
-        }
-        .btn-back:hover {
-            background: #ec4899;
-            color: #fff;
-        }
+    .panel {
+      position: sticky;
+      top: 8px;
+      z-index: 5;
+      display: grid;
+      gap: 10px;
+      margin: 14px 0 18px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(16, 8, 32, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
 
-        /* Category Grid */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+    .add-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 9px;
+    }
 
-        .category-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 15px 12px;
-            cursor: grab; 
-            transition: background-color 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 90px;
-            position: relative;
-        }
-        .category-card:active {
-            cursor: grabbing;
-        }
-        .category-card:hover {
-            border-color: var(--primary);
-            background-color: #21252e;
-        }
+    input[type="text"] {
+      width: 100%;
+      min-height: var(--tap);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0 14px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 16px;
+      font-weight: 750;
+      outline: none;
+    }
 
-        .static-mode .category-card {
-            cursor: pointer; 
-        }
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
 
-        .sortable-ghost {
-            opacity: 0.4;
-            background-color: #374151;
-            border: 1px dashed var(--primary);
-        }
-        .sortable-drag {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            cursor: grabbing !important;
-        }
+    input[type="text"]:focus {
+      border-color: rgba(39, 245, 255, 0.75);
+      box-shadow: 0 0 0 4px rgba(39, 245, 255, 0.12);
+    }
 
-        .cat-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 6px;
-            pointer-events: none; 
-        }
+    button {
+      min-height: var(--tap);
+      border: 0;
+      border-radius: 16px;
+      color: var(--text);
+      background: var(--card-strong);
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      transition: transform 0.08s ease, filter 0.15s ease, background 0.15s ease;
+      font-family: inherit;
+    }
 
-        .cat-summary {
-            font-size: 0.75rem;
-            color: var(--primary);
-            word-break: break-word;
-            line-height: 1.3;
-            pointer-events: none;
-        }
+    button:active {
+      transform: scale(0.96);
+      filter: brightness(1.18);
+    }
 
-        /* Modals */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            padding: 15px;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+    button:disabled {
+      opacity: 0.36;
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+      box-shadow: none;
+    }
 
-        .modal-content {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 600px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transform: translateY(20px);
-            transition: var(--transition);
-        }
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
+    button:disabled:active {
+      transform: none;
+      filter: grayscale(0.35);
+    }
 
-        .modal-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .btn-primary {
+      padding: 0 18px;
+      background: linear-gradient(135deg, var(--pink), #8a5cff 55%, var(--cyan));
+      box-shadow: 0 10px 25px rgba(255, 79, 216, 0.22);
+      white-space: nowrap;
+    }
 
-        .modal-header h2 {
-            font-size: 1.1rem;
-            color: #fff;
-        }
+    .mini-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
 
-        .btn-close-icon {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.8rem;
-            cursor: pointer;
-            line-height: 1;
-            transition: var(--transition);
-        }
-        .btn-close-icon:hover {
-            color: #fff;
-        }
+    .mini-actions button {
+      min-height: 42px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+    }
 
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-        }
+    .people {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 14px;
+    }
 
-        #helpModal {
-            z-index: 2000;
-        }
-        #helpModal .modal-content {
-            max-width: 320px;
-            text-align: center;
-            padding: 20px;
-        }
+    .person-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.075));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
 
-        .btn-done {
-            background-color: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            width: 100%;
-        }
+    .person-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 9px;
+      align-items: stretch;
+      padding: 10px 10px 6px;
+    }
 
-        .grid-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-        }
+    .name-open {
+      min-width: 0;
+      min-height: 52px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      text-align: left;
+      display: grid;
+      align-content: center;
+      gap: 2px;
+    }
 
-        .option-label {
-            display: block;
-            position: relative;
-            cursor: pointer;
-        }
-        .option-label input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
+    .name-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 19px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
 
-        .option-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #272a33;
-            border: 1px solid var(--border-color);
-            padding: 12px 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            transition: var(--transition);
-            height: 100%;
-            gap: 8px;
-        }
+    .name-hint {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 11px;
+      font-weight: 800;
+    }
 
-        .option-label input:checked ~ .option-button {
-            background-color: rgba(99, 102, 241, 0.15);
-            border-color: var(--primary);
-            color: #fff;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
-        }
+    .delete-btn {
+      width: 52px;
+      min-width: 52px;
+      min-height: 52px;
+      background: rgba(255, 94, 122, 0.18);
+      color: #ffdce4;
+      border: 1px solid rgba(255, 94, 122, 0.35);
+      font-size: 20px;
+    }
 
-        .btn-item-help {
-            background-color: #374151;
-            color: #d1d5db;
-            border: none;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
+    .summary-items {
+      padding: 6px 10px 10px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 3px;
+    }
 
-        .text-input {
-            width: 100%;
-            background-color: #272a33;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            -webkit-user-select: text;
-            user-select: text; 
-        }
-        .text-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+    .summary-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      min-height: 32px;
+      padding: 3px 1px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(0, 0, 0, 0.16);
+    }
 
-        /* Output Panel */
-        .output-panel {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
+    .summary-item.is-active {
+      border-color: rgba(39, 245, 255, 0.45);
+      background: rgba(39, 245, 255, 0.12);
+      box-shadow: inset 0 0 18px rgba(39, 245, 255, 0.08);
+    }
 
-        .prompt-output {
-            width: 100%;
-            background-color: #0f1115;
-            border: 1px solid var(--border-color);
-            color: #a7f3d0;
-            padding: 12px;
-            border-radius: 8px;
-            min-height: 100px;
-            resize: vertical;
-            font-family: monospace;
-            font-size: 0.85rem;
-            -webkit-user-select: text;
-            user-select: text; 
-        }
+    .icon {
+      display: grid;
+      place-items: center;
+      min-width: 18px;
+      height: 19px;
+      border-radius: 7px;
+      font-size: 12px;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.13);
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.08);
+    }
 
-        .panel-controls {
-            display: flex;
-            gap: 10px;
-        }
+    .gold-glove {
+      background: linear-gradient(135deg, rgba(255, 230, 120, 0.34), rgba(255, 181, 38, 0.24));
+      box-shadow:
+        inset 0 0 12px rgba(255, 255, 255, 0.28),
+        0 0 12px rgba(255, 205, 54, 0.36);
+    }
 
-        .btn-action {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+    .gold-glove .emoji-gold {
+      display: inline-block;
+      filter: sepia(1) saturate(5.2) hue-rotate(346deg) brightness(1.24) contrast(1.08) drop-shadow(0 0 4px rgba(255, 222, 82, 0.75));
+      transform: translateZ(0);
+    }
 
-        .btn-copy {
-            background-color: var(--primary);
-            color: #fff;
-            flex: 2;
-        }
-        .btn-copy:active {
-            transform: scale(0.98);
-        }
-        
-        .btn-reset {
-            background-color: transparent;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            flex: 1;
-        }
-        .btn-reset:hover {
-            background-color: #374151;
-            color: #fff;
-        }
-    </style>
+    .count {
+      display: grid;
+      place-items: center;
+      min-width: 12px;
+      min-height: 19px;
+      font-size: 14px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.06em;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 170px;
+      border: 1px dashed rgba(255, 255, 255, 0.22);
+      border-radius: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.7;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-note {
+      margin: 18px 4px 0;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: max(16px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
+    }
+
+    .modal[hidden] {
+      display: none;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 1, 12, 0.68);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-sheet {
+      position: relative;
+      width: min(620px, 100%);
+      max-height: min(78vh, 760px);
+      overflow: auto;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 79, 216, 0.24), transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(39, 245, 255, 0.2), transparent 30%),
+        rgba(24, 12, 42, 0.96);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58);
+      padding: 14px;
+    }
+
+    .modal-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-kicker {
+      margin: 0 0 5px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .modal-title {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: clamp(22px, 6vw, 34px);
+      font-weight: 950;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .modal-close {
+      width: 50px;
+      min-width: 50px;
+      min-height: 50px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.11);
+      font-size: 22px;
+    }
+
+    .modal-items {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .modal-item-card {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-item-display {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 7px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .modal-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      font-size: 22px;
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .modal-icon.gold-glove {
+      background: linear-gradient(135deg, rgba(255, 230, 120, 0.36), rgba(255, 181, 38, 0.26));
+      box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, 0.3),
+        0 0 18px rgba(255, 205, 54, 0.42);
+    }
+
+    .modal-label {
+      min-width: 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .modal-count {
+      min-width: 30px;
+      text-align: right;
+      font-size: 25px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.06em;
+    }
+
+    .modal-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .count-btn {
+      width: 100%;
+      min-width: 0;
+      min-height: 42px;
+      padding: 0;
+      font-size: 24px;
+      line-height: 1;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+    }
+
+    .minus {
+      color: #ffd9e0;
+      background: rgba(255, 94, 122, 0.18);
+    }
+
+    .plus {
+      color: #dfffff;
+      background: rgba(39, 245, 255, 0.16);
+    }
+
+    @media (max-width: 420px) {
+      body { padding-left: 8px; padding-right: 8px; }
+      .panel { top: 4px; border-radius: 20px; gap: 8px; padding: 10px; }
+      .add-row {
+        grid-template-columns: minmax(0, 1fr) minmax(104px, 0.56fr);
+        gap: 6px;
+      }
+      input[type="text"] {
+        min-height: 42px;
+        border-radius: 14px;
+        padding: 0 10px;
+        font-size: 14px;
+      }
+      .btn-primary {
+        min-height: 42px;
+        border-radius: 14px;
+        padding: 0 8px;
+        font-size: 13px;
+      }
+      .mini-actions { gap: 6px; }
+      .mini-actions button {
+        min-height: 40px;
+        border-radius: 14px;
+        font-size: 12px;
+      }
+      .people { grid-template-columns: 1fr; gap: 10px; }
+      .person-card { border-radius: 22px; }
+      .person-top { padding: 8px 8px 4px; gap: 6px; }
+      .name-open { min-height: 46px; border-radius: 14px; padding: 6px 10px; }
+      .name-text { font-size: 17px; }
+      .name-hint { font-size: 10px; }
+      .delete-btn { width: 46px; min-width: 46px; min-height: 46px; border-radius: 14px; }
+      .summary-items { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; padding: 4px 8px 8px; }
+      .summary-item { min-height: 28px; border-radius: 10px; gap: 1px; padding: 2px 1px; }
+      .icon { min-width: 16px; height: 17px; font-size: 11px; border-radius: 6px; }
+      .count { min-width: 11px; min-height: 17px; font-size: 13px; }
+      .modal { padding-left: 8px; padding-right: 8px; }
+      .modal-sheet { border-radius: 24px; padding: 10px; max-height: 82vh; }
+      .modal-head { gap: 7px; margin-bottom: 9px; }
+      .modal-close { width: 44px; min-width: 44px; min-height: 44px; border-radius: 14px; }
+      .modal-items { gap: 7px; }
+      .modal-item-card { padding: 7px; border-radius: 16px; gap: 7px; }
+      .modal-item-display { grid-template-columns: auto 1fr auto; gap: 5px; min-height: 37px; padding: 5px; border-radius: 12px; }
+      .modal-icon { width: 31px; height: 31px; font-size: 18px; border-radius: 10px; }
+      .modal-label { font-size: 10px; }
+      .modal-count { min-width: 22px; font-size: 21px; }
+      .count-btn { min-height: 38px; border-radius: 12px; font-size: 22px; }
+    }
+  </style>
 </head>
 <body>
+  <main class="app">
+    <header>
+      <div class="badge">TikTok LIVE Battle Memo</div>
+      <h1>バトルアイテム<br>所持数メモ</h1>
+      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると、中央ポップアップでアイテムを＋/−できます。</p>
+    </header>
 
-    <div class="container">
-        <header>
-            <h1>Prompt Builder v2.9</h1>
-            <div class="header-buttons">
-                <a href="https://tashi-kusanose.github.io/stream_summary/" class="btn-header btn-back">まとめに戻る</a>
-                <button class="btn-header" onclick="showHelp(event, '使い方', '1. カテゴリをタップして設定（選択すると自動で閉じます）。<br>2. カテゴリを<b>長押し</b>して動かすと、上下左右に並び替え可能。<br>3. 一番下の「コピー」を押してChatGPTに貼り付け。')">使い方</button>
-            </div>
-        </header>
+    <section class="panel" aria-label="操作パネル">
+      <form class="add-row" id="addForm">
+        <input id="newName" type="text" placeholder="名前を入力（例：なつみ）" autocomplete="off" />
+        <button class="btn-primary" id="addBtn" type="submit" disabled>＋ 人を追加</button>
+      </form>
+      <div class="mini-actions">
+        <button type="button" id="resetCountsBtn">🔄 個数だけ0</button>
+        <button type="button" id="clearBtn">🗑 全削除</button>
+      </div>
+    </section>
 
-        <div class="category-grid" id="categoryGrid">
-            
-            <div class="category-card" data-cat="ref" onclick="openCategory('cat-ref', '画像参照')">
-                <div class="cat-title">画像参照</div>
-                <div class="cat-summary" id="sum-ref">参照画像に準ずる</div>
-            </div>
+    <section class="people" id="people"></section>
 
-            <div class="category-card" data-cat="art" onclick="openCategory('cat-art', 'アートスタイル')">
-                <div class="cat-title">アートスタイル</div>
-                <div class="cat-summary" id="sum-art">未設定</div>
-            </div>
+    <p class="footer-note">保存先：ブラウザのlocalStorage。同じ端末・同じブラウザで開くと前回の続きから使えます。</p>
+  </main>
 
-            <div class="category-card" data-cat="body" onclick="openCategory('cat-body', '頭身体型')">
-                <div class="cat-title">頭身体型</div>
-                <div class="cat-summary" id="sum-body">超ミニちびキャラ3D</div>
-            </div>
-
-            <div class="category-card" data-cat="framing" onclick="openCategory('cat-framing', 'フレーミング')">
-                <div class="cat-title">フレーミング</div>
-                <div class="cat-summary" id="sum-framing">上半身</div>
-            </div>
-
-            <div class="category-card" data-cat="angle" onclick="openCategory('cat-angle', 'アングル')">
-                <div class="cat-title">アングル</div>
-                <div class="cat-summary" id="sum-angle">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="posture" onclick="openCategory('cat-posture', '基本姿勢')">
-                <div class="cat-title">基本姿勢</div>
-                <div class="cat-summary" id="sum-posture">立ち姿</div>
-            </div>
-
-            <div class="category-card" data-cat="cosplay" onclick="openCategory('cat-cosplay', 'コスプレ衣装')">
-                <div class="cat-title">コスプレ衣装</div>
-                <div class="cat-summary" id="sum-cosplay">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="pose" onclick="openCategory('cat-pose', 'ポーズ')">
-                <div class="cat-title">ポーズ</div>
-                <div class="cat-summary" id="sum-pose">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="lighting" onclick="openCategory('cat-lighting', '照明')">
-                <div class="cat-title">照明</div>
-                <div class="cat-summary" id="sum-lighting">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="quality" onclick="openCategory('cat-quality', '品質・画質')">
-                <div class="cat-title">品質・画質</div>
-                <div class="cat-summary" id="sum-quality">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="aspect" onclick="openCategory('cat-aspect', 'アスペクト比')">
-                <div class="cat-title">アスペクト比</div>
-                <div class="cat-summary" id="sum-aspect">1:1 (正方形)</div>
-            </div>
-
-            <div class="category-card" data-cat="effect" onclick="openCategory('cat-effect', 'エフェクト装飾')">
-                <div class="cat-title">エフェクト装飾</div>
-                <div class="cat-summary" id="sum-effect">未設定</div>
-            </div>
-
-            <div class="category-card" data-cat="sticker" onclick="openCategory('cat-sticker', 'ステッカーテキスト')">
-                <div class="cat-title">ステッカーテキスト</div>
-                <div class="cat-summary" id="sum-sticker">未設定</div>
-            </div>
+  <div class="modal" id="itemModal" hidden>
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <section class="modal-sheet" role="dialog" aria-modal="true" aria-label="アイテム編集">
+      <div class="modal-head">
+        <div>
+          <p class="modal-kicker">ITEM EDIT</p>
+          <p class="modal-title" id="modalTitle">名前未入力</p>
         </div>
+        <button class="modal-close" type="button" id="modalClose" aria-label="閉じる">×</button>
+      </div>
+      <div class="modal-items" id="modalItems"></div>
+    </section>
+  </div>
 
-        <div class="output-panel">
-            <textarea id="resultPrompt" class="prompt-output" readonly placeholder="ここにプロンプトが生成されます..."></textarea>
-            <div class="panel-controls">
-                <button type="button" class="btn-action btn-reset" onclick="resetForm()">リセット</button>
-                <button type="button" class="btn-action btn-copy" onclick="copyPrompt()">コピーしてChatGPTを開く</button>
+  <script>
+    const STORAGE_KEY = "tiktok-battle-items-counter-v2";
+    const OLD_STORAGE_KEY = "tiktok-battle-items-counter-v1";
+
+    const ITEMS = [
+      { key: "glove", name: "グローブ", icon: "🥊" },
+      { key: "secretGlove", name: "シークレットグローブ", icon: "🥊", variant: "gold" },
+      { key: "booster2", name: "2位ブースター", icon: "⚡2" },
+      { key: "booster3", name: "3位ブースター", icon: "⚡3" },
+      { key: "mist", name: "ミスト", icon: "☁" },
+      { key: "timer", name: "タイマー", icon: "⏱" },
+      { key: "hammer", name: "ハンマー", icon: "🔨" }
+    ];
+
+    const els = {
+      form: document.getElementById("addForm"),
+      newName: document.getElementById("newName"),
+      addBtn: document.getElementById("addBtn"),
+      people: document.getElementById("people"),
+      resetCountsBtn: document.getElementById("resetCountsBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      modal: document.getElementById("itemModal"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalItems: document.getElementById("modalItems"),
+      modalClose: document.getElementById("modalClose")
+    };
+
+    let state = loadState();
+    let activePersonId = null;
+
+    function createEmptyCounts() {
+      return Object.fromEntries(ITEMS.map(item => [item.key, 0]));
+    }
+
+    function makePerson(name = "") {
+      return {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        name,
+        counts: createEmptyCounts()
+      };
+    }
+
+    function normalizePeople(saved) {
+      if (!Array.isArray(saved)) return null;
+      return saved.map(person => ({
+        id: person.id || String(Date.now() + Math.random()),
+        name: person.name || "",
+        counts: { ...createEmptyCounts(), ...(person.counts || {}) }
+      }));
+    }
+
+    function loadState() {
+      try {
+        const saved = normalizePeople(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+        if (saved) return saved;
+
+        const oldSaved = normalizePeople(JSON.parse(localStorage.getItem(OLD_STORAGE_KEY)));
+        if (oldSaved) return oldSaved;
+      } catch (error) {
+        console.warn("保存データの読み込みに失敗しました", error);
+      }
+      return [];
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getPersonById(id) {
+      return state.find(person => person.id === id);
+    }
+
+    function iconClass(item) {
+      return item.variant === "gold" ? "gold-glove" : "";
+    }
+
+    function iconContent(item) {
+      return item.variant === "gold" ? `<span class="emoji-gold">${item.icon}</span>` : item.icon;
+    }
+
+    function renderPeople() {
+      saveState();
+
+      if (state.length === 0) {
+        els.people.innerHTML = `
+          <div class="empty">
+            <div>
+              まだ名前がありません。<br>
+              上の入力欄から追加してください。
             </div>
-        </div>
-    </div>
+          </div>
+        `;
+        return;
+      }
 
-    <div id="categoryModal" class="modal-overlay" onclick="closeCategory(event)">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="catModalTitle">カテゴリ名</h2>
-                <button type="button" class="btn-close-icon" onclick="closeCategory(event, true)">×</button>
+      els.people.innerHTML = state.map(person => `
+        <article class="person-card" data-id="${person.id}">
+          <div class="person-top">
+            <button class="name-open" type="button" data-action="open-modal" aria-label="${escapeHtml(person.name || "名前未入力")}のアイテムを編集">
+              <span class="name-text">${escapeHtml(person.name || "名前未入力")}</span>
+              <span class="name-hint">タップでアイテム編集</span>
+            </button>
+            <button class="delete-btn" type="button" data-action="delete" aria-label="この人を削除">×</button>
+          </div>
+          <div class="summary-items" aria-label="所持アイテム一覧">
+            ${ITEMS.map(item => {
+              const count = Number(person.counts[item.key] || 0);
+              return `
+                <div class="summary-item ${count > 0 ? "is-active" : ""}" title="${item.name}">
+                  <span class="icon ${iconClass(item)}" aria-hidden="true">${iconContent(item)}</span>
+                  <span class="count">${count}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderModal() {
+      const person = getPersonById(activePersonId);
+      if (!person) {
+        closeModal();
+        return;
+      }
+
+      els.modalTitle.textContent = person.name || "名前未入力";
+      els.modalItems.innerHTML = ITEMS.map(item => {
+        const count = Number(person.counts[item.key] || 0);
+        return `
+          <div class="modal-item-card">
+            <div class="modal-item-display">
+              <span class="modal-icon ${iconClass(item)}" aria-hidden="true">${iconContent(item)}</span>
+              <span class="modal-label">${item.name}</span>
+              <span class="modal-count" aria-live="polite">${count}</span>
             </div>
-            <div class="modal-body">
-                <form id="promptForm">
-                    <div id="cat-ref" class="category-content" style="display:none;">
-                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom: 10px;">
-                            何も入力しない場合、「アップロードした参照画像に準ずる」指示になります。<br>
-                            ※入力後、画面外か右上の「×」をタップして閉じてください。
-                        </p>
-                        <input type="text" id="refImage" class="text-input" placeholder="例: ピンク色の髪で、青い瞳の女の子" oninput="updatePrompt()">
-                    </div>
-
-                    <div id="cat-art" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="artStyle" value="アニメ調 (Anime Style)" onchange="handleRadioSelect()"><div class="option-button"><span>アニメ調</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'アニメ調', 'フラットな塗りや線のスタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="リアルフォト (Photorealistic)" onchange="handleRadioSelect()"><div class="option-button"><span>リアルフォト</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'リアルフォト', '写実的なスタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="水彩画 (Watercolor)" onchange="handleRadioSelect()"><div class="option-button"><span>水彩画</span><button type="button" class="btn-item-help" onclick="showHelp(event, '水彩画', 'アナログな水彩画スタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="油絵風 (Oil Painting)" onchange="handleRadioSelect()"><div class="option-button"><span>油絵風</span><button type="button" class="btn-item-help" onclick="showHelp(event, '油絵風', '重厚感のある油彩画スタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="ピクセルアート (Pixel Art)" onchange="handleRadioSelect()"><div class="option-button"><span>ピクセルアート</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ピクセルアート', 'レトロゲームのようなドット絵です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="サイバーパンク風 (Cyberpunk)" onchange="handleRadioSelect()"><div class="option-button"><span>サイバーパンク</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'サイバーパンク', '近未来的なSFスタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="artStyle" value="コミック調 (Comic Book)" onchange="handleRadioSelect()"><div class="option-button"><span>コミック調</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'コミック調', 'アメコミ風のスタイルです。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-body" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="bodyType" value="Maintain the body proportion and head-to-body ratio of the reference image." onchange="handleRadioSelect()"><div class="option-button"><span>参照画像のまま</span><button type="button" class="btn-item-help" onclick="showHelp(event, '参照画像のまま', 'アップロードされた参照画像の体型や頭身の比率を維持して描画します。')">?</button></div></label>
-
-                            <label class="option-label"><input type="radio" name="bodyType" value="超ミニチュアのちびキャラ3Dフィギュアスタイル。極端な頭身比率（約2.5頭身）で、頭が大きく体が非常に小さい。超デフォルメされた愛らしいデザインで、精巧なディテールを持つ。" onchange="handleRadioSelect()" checked><div class="option-button"><span>超ミニちびキャラ3D</span><button type="button" class="btn-item-help" onclick="showHelp(event, '超ミニちびキャラ3D', '極端に小さく、頭が大きい2.5頭身の超ミニチュアスタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="bodyType" value="日本のアニメスタイル（標準的な体型）" onchange="handleRadioSelect()"><div class="option-button"><span>日本のアニメキャラ</span><button type="button" class="btn-item-help" onclick="showHelp(event, '日本のアニメキャラ', '標準的な体型です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="bodyType" value="八頭身以上のモデル体型" onchange="handleRadioSelect()"><div class="option-button"><span>八頭身モデル</span><button type="button" class="btn-item-help" onclick="showHelp(event, '八頭身モデル', '高頭身スタイルです。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-framing" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="framing" value="全身を映す" onchange="handleRadioSelect()"><div class="option-button"><span>全身</span><button type="button" class="btn-item-help" onclick="showHelp(event, '全身', '頭の先から足先まで収めます。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="framing" value="上半身を映す" onchange="handleRadioSelect()" checked><div class="option-button"><span>上半身</span><button type="button" class="btn-item-help" onclick="showHelp(event, '上半身', '腰から上を描画します。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="framing" value="バストアップ（胸から上）" onchange="handleRadioSelect()"><div class="option-button"><span>バストアップ</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'バストアップ', '胸から上を描画します。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-angle" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="angle" value="真正面からのアングル" onchange="handleRadioSelect()"><div class="option-button"><span>正面</span><button type="button" class="btn-item-help" onclick="showHelp(event, '正面', '真正面の構図です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="ハイアングル（上からの俯瞰）" onchange="handleRadioSelect()"><div class="option-button"><span>俯瞰</span><button type="button" class="btn-item-help" onclick="showHelp(event, '俯瞰', '上から見下ろす角度です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="ローアングル（下からの煽り）" onchange="handleRadioSelect()"><div class="option-button"><span>ローアングル(煽り)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '煽り', '下から見上げる角度です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="横顔（プロファイル）" onchange="handleRadioSelect()"><div class="option-button"><span>横顔</span><button type="button" class="btn-item-help" onclick="showHelp(event, '横顔', '横顔の構図です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="背面からのアングル（後ろ姿）" onchange="handleRadioSelect()"><div class="option-button"><span>背面(後ろ姿)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '背面', '後ろ姿の構図です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="ダッチアングル（画面が斜めに傾いている）" onchange="handleRadioSelect()"><div class="option-button"><span>ダッチアングル</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ダッチアングル', '斜めに傾けた構図です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="angle" value="鳥瞰図（真上からの視点）" onchange="handleRadioSelect()"><div class="option-button"><span>鳥瞰図(真上)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '鳥瞰図', '真上から見下ろした構図です。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-posture" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="posture" value="自然な立ち姿" onchange="handleRadioSelect()" checked><div class="option-button"><span>立ち姿</span><button type="button" class="btn-item-help" onclick="showHelp(event, '立ち姿', '自然な直立姿勢です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="posture" value="椅子に座っている" onchange="handleRadioSelect()"><div class="option-button"><span>椅子に座ってる</span><button type="button" class="btn-item-help" onclick="showHelp(event, '椅子に座ってる', '椅子などに腰掛けている姿勢です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="posture" value="床に座っている" onchange="handleRadioSelect()"><div class="option-button"><span>床に座ってる</span><button type="button" class="btn-item-help" onclick="showHelp(event, '床に座ってる', '床に直接座っている姿勢です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="posture" value="躍動的なアクションポーズ" onchange="handleRadioSelect()"><div class="option-button"><span>躍動的なアクション</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'アクション', '動きのあるポーズです。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-cosplay" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="cosplay" value="クラシックなメイド服" onchange="handleRadioSelect()"><div class="option-button"><span>メイド服</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'メイド服', '伝統的なメイド衣装です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="日本のセーラー服" onchange="handleRadioSelect()"><div class="option-button"><span>セーラー服</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'セーラー服', '日本の学生服です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="サイバーパンク風のテックウェア" onchange="handleRadioSelect()"><div class="option-button"><span>サイバーパンク</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'サイバーパンク', '近未来的なウェアです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="ファンタジー世界の重厚な鎧" onchange="handleRadioSelect()"><div class="option-button"><span>ファンタジー鎧</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ファンタジー鎧', '重厚感のあるアーマーです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="忍者の装束" onchange="handleRadioSelect()"><div class="option-button"><span>忍者装束</span><button type="button" class="btn-item-help" onclick="showHelp(event, '忍者装束', '和風アサシンスタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="魔法使いのローブと帽子" onchange="handleRadioSelect()"><div class="option-button"><span>魔女・魔法使い</span><button type="button" class="btn-item-help" onclick="showHelp(event, '魔女', 'ローブと帽子のセットです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="警察の制服" onchange="handleRadioSelect()"><div class="option-button"><span>ポリス</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ポリス', '警察官のユニフォームです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="ナース服" onchange="handleRadioSelect()"><div class="option-button"><span>ナース</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ナース', '看護師のコスチュームです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="華やかな水着" onchange="handleRadioSelect()"><div class="option-button"><span>水着</span><button type="button" class="btn-item-help" onclick="showHelp(event, '水着', '華やかな水着スタイルです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="日本の美しい浴衣" onchange="handleRadioSelect()"><div class="option-button"><span>浴衣</span><button type="button" class="btn-item-help" onclick="showHelp(event, '浴衣', '日本の伝統着です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="SFチックなパイロットスーツ" onchange="handleRadioSelect()"><div class="option-button"><span>パイロットスーツ</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'パイロットスーツ', '体にフィットしたスーツです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="cosplay" value="ゴシックな吸血鬼の衣装" onchange="handleRadioSelect()"><div class="option-button"><span>吸血鬼</span><button type="button" class="btn-item-help" onclick="showHelp(event, '吸血鬼', 'ダークでエレガントな衣装です。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-pose" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="pose" value="手でピースサインを作っている" onchange="handleRadioSelect()"><div class="option-button"><span>ピースサイン</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ピースサイン', '定番の元気なポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="自信ありげに腰に手を当てている" onchange="handleRadioSelect()"><div class="option-button"><span>腰に手を当てる</span><button type="button" class="btn-item-help" onclick="showHelp(event, '腰に手を当てる', '自信に満ちたポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="胸の前で腕を組んでいる" onchange="handleRadioSelect()"><div class="option-button"><span>腕を組む</span><button type="button" class="btn-item-help" onclick="showHelp(event, '腕を組む', '強気な印象のポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="カメラに向かって指を差している" onchange="handleRadioSelect()"><div class="option-button"><span>カメラを指差す</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'カメラを指差す', 'アピール力の高いポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="肩越しに振り返っている" onchange="handleRadioSelect()"><div class="option-button"><span>振り返る</span><button type="button" class="btn-item-help" onclick="showHelp(event, '振り返る', '背中を向けつつ振り返るポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="にこやかに手を振っている" onchange="handleRadioSelect()"><div class="option-button"><span>手を振る</span><button type="button" class="btn-item-help" onclick="showHelp(event, '手を振る', '挨拶をする仕草です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="両手でハートマークを作っている" onchange="handleRadioSelect()"><div class="option-button"><span>手でハート</span><button type="button" class="btn-item-help" onclick="showHelp(event, '手でハート', '可愛らしいポーズです。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="pose" value="武器や小道具を構えている" onchange="handleRadioSelect()"><div class="option-button"><span>小道具を構える</span><button type="button" class="btn-item-help" onclick="showHelp(event, '小道具を構える', 'アイテムを手に戦闘態勢をとるポーズです。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-lighting" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="lighting" value="自然光 (Natural Light)" onchange="handleRadioSelect()"><div class="option-button"><span>自然光</span><button type="button" class="btn-item-help" onclick="showHelp(event, '自然光', '柔らかくリアルな照明です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="シネマティック照明 (Cinematic Lighting)" onchange="handleRadioSelect()"><div class="option-button"><span>シネマティック</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'シネマティック', 'ドラマチックな照明です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="ネオンライト (Neon Lighting)" onchange="handleRadioSelect()"><div class="option-button"><span>ネオンライト</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ネオンライト', '色鮮やかな人工光です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="バックライト/逆光 (Backlighting)" onchange="handleRadioSelect()"><div class="option-button"><span>バックライト(逆光)</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'バックライト', '背後からの光です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="プロのスタジオ照明 (Studio Lighting)" onchange="handleRadioSelect()"><div class="option-button"><span>スタジオ照明</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'スタジオ照明', '被写体を美しく見せる照明です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="ローキー/暗め (Low-key Lighting)" onchange="handleRadioSelect()"><div class="option-button"><span>ローキー(暗め)</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ローキー', '暗くミステリアスな照明です。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="lighting" value="ゴールデンアワー (Golden Hour)" onchange="handleRadioSelect()"><div class="option-button"><span>ゴールデンアワー</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ゴールデンアワー', '暖かみのある黄金色の光です。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-aspect" class="category-content" style="display:none;">
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="aspectRatio" value="9:16（縦長）" onchange="handleRadioSelect()"><div class="option-button"><span>9:16 (縦長)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '9:16', 'スマホ全画面やShorts動画向け。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="aspectRatio" value="1:1（正方形）" onchange="handleRadioSelect()" checked><div class="option-button"><span>1:1 (正方形)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '1:1', 'SNSアイコンなどに適した比率。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="aspectRatio" value="16:9（横長）" onchange="handleRadioSelect()"><div class="option-button"><span>16:9 (横長)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '16:9', 'YouTubeサムネなどに適した比率。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="aspectRatio" value="3:2（写真サイズ）" onchange="handleRadioSelect()"><div class="option-button"><span>3:2 (写真)</span><button type="button" class="btn-item-help" onclick="showHelp(event, '3:2', '一般的な写真の比率。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-quality" class="category-content" style="display:none;">
-                        <p style="margin-bottom:10px; font-size:0.8rem; color:var(--text-muted);">※複数選択可能です。画面外か右上の「×」で閉じます。</p>
-                        <div class="grid-options">
-                            <label class="option-label"><input type="checkbox" name="quality" value="Masterpiece（最高傑作の品質）" onchange="updatePrompt()"><div class="option-button"><span>Masterpiece</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'Masterpiece', '最高品質の傑作を出力する指示です。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="quality" value="高精細なディテール" onchange="updatePrompt()"><div class="option-button"><span>高精細</span><button type="button" class="btn-item-help" onclick="showHelp(event, '高精細', '細部まで描き込む指示です。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="quality" value="8k resolution" onchange="updatePrompt()"><div class="option-button"><span>8K解像度</span><button type="button" class="btn-item-help" onclick="showHelp(event, '8K解像度', '非常に高い解像度を求める指示です。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="quality" value="ハイパーリアリズム" onchange="updatePrompt()"><div class="option-button"><span>ハイパーリアリズム</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'ハイパーリアリズム', '現実以上にリアルな質感を描写します。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-effect" class="category-content" style="display:none;">
-                        <p style="margin-bottom:10px; font-size:0.8rem; color:var(--text-muted);">※複数選択可能です。画面外か右上の「×」で閉じます。</p>
-                        <div class="grid-options">
-                            <label class="option-label"><input type="checkbox" name="effects" value="桜の花びらが舞っている" onchange="updatePrompt()"><div class="option-button"><span>桜舞う</span><button type="button" class="btn-item-help" onclick="showHelp(event, '桜舞う', '桜の花びらが舞い散る演出。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="雪が降っている" onchange="updatePrompt()"><div class="option-button"><span>雪</span><button type="button" class="btn-item-help" onclick="showHelp(event, '雪', '雪が降る演出。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="火花が散っている" onchange="updatePrompt()"><div class="option-button"><span>火花</span><button type="button" class="btn-item-help" onclick="showHelp(event, '火花', '火花のエフェクト。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="足元に輝く魔法陣" onchange="updatePrompt()"><div class="option-button"><span>魔法陣</span><button type="button" class="btn-item-help" onclick="showHelp(event, '魔法陣', 'ファンタジーな魔法陣。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="空気中を漂うキラキラとした光の粒子" onchange="updatePrompt()"><div class="option-button"><span>キラキラ粒子</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'キラキラ粒子', '光る粒子が漂う装飾。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="ふわふわと浮かぶシャボン玉" onchange="updatePrompt()"><div class="option-button"><span>シャボン玉</span><button type="button" class="btn-item-help" onclick="showHelp(event, 'シャボン玉', 'シャボン玉が浮かぶ演出。')">?</button></div></label>
-                            <label class="option-label"><input type="checkbox" name="effects" value="華やかな紙吹雪" onchange="updatePrompt()"><div class="option-button"><span>紙吹雪</span><button type="button" class="btn-item-help" onclick="showHelp(event, '紙吹雪', '紙吹雪が舞う演出。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                    <div id="cat-sticker" class="category-content" style="display:none;">
-                        <input type="text" id="stickerText" class="text-input" placeholder="例: Happy Birthday, LEVEL UP" oninput="updatePrompt()">
-                        <h3 style="font-size: 0.9rem; margin-bottom: 8px; color: #fff;">配置位置 (選ぶと閉じます)</h3>
-                        <div class="grid-options">
-                            <label class="option-label"><input type="radio" name="stickerPos" value="左上" onchange="handleRadioSelect()"><div class="option-button"><span>左上</span><button type="button" class="btn-item-help" onclick="showHelp(event, '左上', '左上に配置します。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="stickerPos" value="右上" onchange="handleRadioSelect()"><div class="option-button"><span>右上</span><button type="button" class="btn-item-help" onclick="showHelp(event, '右上', '右上に配置します。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="stickerPos" value="中央" onchange="handleRadioSelect()" checked><div class="option-button"><span>中央</span><button type="button" class="btn-item-help" onclick="showHelp(event, '中央', '画面中央に配置します。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="stickerPos" value="左下" onchange="handleRadioSelect()"><div class="option-button"><span>左下</span><button type="button" class="btn-item-help" onclick="showHelp(event, '左下', '左下に配置します。')">?</button></div></label>
-                            <label class="option-label"><input type="radio" name="stickerPos" value="右下" onchange="handleRadioSelect()"><div class="option-button"><span>右下</span><button type="button" class="btn-item-help" onclick="showHelp(event, '右下', '右下に配置します。')">?</button></div></label>
-                        </div>
-                    </div>
-
-                </form>
+            <div class="modal-controls">
+              <button class="count-btn minus" type="button" data-action="minus" data-item="${item.key}" aria-label="${item.name}を減らす">−</button>
+              <button class="count-btn plus" type="button" data-action="plus" data-item="${item.key}" aria-label="${item.name}を増やす">＋</button>
             </div>
-        </div>
-    </div>
+          </div>
+        `;
+      }).join("");
+    }
 
-    <div id="helpModal" class="modal-overlay" onclick="closeHelp(event)">
-        <div class="modal-content">
-            <h2 id="helpModalTitle" style="font-size: 1.1rem; color: #fff; margin-bottom: 10px;">タイトル</h2>
-            <p id="helpModalText" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">説明文</p>
-            <button class="btn-done" onclick="closeHelp(event, true)">OK</button>
-        </div>
-    </div>
+    function openModal(personId) {
+      activePersonId = personId;
+      renderModal();
+      els.modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      setTimeout(() => els.modalClose.focus(), 0);
+    }
 
-    <script>
-        // SortableJS の初期化
-        let isStatic = document.body.classList.contains('static-mode');
-        if (!isStatic && typeof Sortable !== 'undefined') {
-            new Sortable(document.getElementById('categoryGrid'), {
-                animation: 200,
-                delay: 200, 
-                delayOnTouchOnly: true,
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                onEnd: function () {
-                    updatePrompt();
-                }
-            });
-        }
+    function closeModal() {
+      activePersonId = null;
+      els.modal.hidden = true;
+      document.body.style.overflow = "";
+    }
 
-        // モーダル制御
-        function openCategory(catId, catName) {
-            document.getElementById('catModalTitle').innerText = catName;
-            document.querySelectorAll('.category-content').forEach(el => el.style.display = 'none');
-            document.getElementById(catId).style.display = 'block';
-            document.getElementById('categoryModal').classList.add('active');
-        }
+    function updateAddButton() {
+      els.addBtn.disabled = els.newName.value.trim().length === 0;
+    }
 
-        function closeCategory(event, force = false) {
-            if (force || event.target.id === 'categoryModal') {
-                document.getElementById('categoryModal').classList.remove('active');
-            }
-        }
+    els.newName.addEventListener("input", updateAddButton);
 
-        function showHelp(event, title, text) {
-            event.stopPropagation(); 
-            event.preventDefault();
-            document.getElementById('helpModalTitle').innerHTML = title;
-            document.getElementById('helpModalText').innerHTML = text;
-            document.getElementById('helpModal').classList.add('active');
-        }
+    els.form.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = els.newName.value.trim();
+      if (!name) {
+        updateAddButton();
+        els.newName.focus();
+        return;
+      }
+      const newPerson = makePerson(name);
+      state.push(newPerson);
+      els.newName.value = "";
+      updateAddButton();
+      renderPeople();
+      openModal(newPerson.id);
+    });
 
-        function closeHelp(event, force = false) {
-            if (force || event.target.id === 'helpModal') {
-                document.getElementById('helpModal').classList.remove('active');
-            }
-        }
+    els.people.addEventListener("click", event => {
+      const card = event.target.closest(".person-card");
+      if (!card) return;
 
-        function handleRadioSelect() {
-            updatePrompt();
-            setTimeout(() => {
-                closeCategory(null, true);
-            }, 180);
-        }
+      const person = getPersonById(card.dataset.id);
+      if (!person) return;
 
-        function getRadioText(name) {
-            const els = document.getElementsByName(name);
-            for (let i = 0; i < els.length; i++) {
-                if (els[i].checked) return els[i].nextElementSibling.querySelector('span').innerText;
-            }
-            return "";
-        }
-        function getRadioValue(name) {
-            const els = document.getElementsByName(name);
-            for (let i = 0; i < els.length; i++) {
-                if (els[i].checked) return els[i].value;
-            }
-            return "";
-        }
-        function getCheckboxData(name) {
-            const els = document.getElementsByName(name);
-            let vals = [], texts = [];
-            for (let i = 0; i < els.length; i++) {
-                if (els[i].checked) {
-                    vals.push(els[i].value);
-                    texts.push(els[i].nextElementSibling.querySelector('span').innerText);
-                }
-            }
-            return { vals, text: texts.length > 0 ? texts.join(", ") : "未設定" };
-        }
+      const button = event.target.closest("button");
+      if (!button) return;
 
-        // プロンプト更新
-        function updatePrompt() {
-            let promptLines = ["以下の条件に従って、魅力的な画像を生成してください。\n"];
-            const cards = document.querySelectorAll('.category-card');
-            
-            cards.forEach(card => {
-                const cat = card.dataset.cat;
-                
-                if (cat === 'ref') {
-                    const val = document.getElementById('refImage').value.trim();
-                    if (val) {
-                        promptLines.push(`【画像イメージ】: ${val}`);
-                        document.getElementById('sum-ref').innerText = "手入力設定あり";
-                    } else {
-                        promptLines.push(`【参照画像】: 添付した画像のイメージや特徴に準拠して描画してください。（画像が添付されていない場合は無視してください）`);
-                        document.getElementById('sum-ref').innerText = "参照画像に準ずる";
-                    }
-                }
-                else if (cat === 'art') {
-                    const val = getRadioValue('artStyle');
-                    if (val) promptLines.push(`【アートスタイル】: ${val}`);
-                    document.getElementById('sum-art').innerText = getRadioText('artStyle') || "未設定";
-                }
-                else if (cat === 'body') {
-                    const val = getRadioValue('bodyType');
-                    if (val) promptLines.push(`【頭身・体型】: ${val}`);
-                    const text = getRadioText('bodyType');
-                    document.getElementById('sum-body').innerText = (text === "超ミニちびキャラ3D") ? "超ミニちびキャラ3D" : (text || "未設定");
-                }
-                else if (cat === 'framing') {
-                    const val = getRadioValue('framing');
-                    if (val) promptLines.push(`【フレーミング】: ${val}`);
-                    document.getElementById('sum-framing').innerText = getRadioText('framing') || "未設定";
-                }
-                else if (cat === 'angle') {
-                    const val = getRadioValue('angle');
-                    if (val) promptLines.push(`【アングル】: ${val}`);
-                    document.getElementById('sum-angle').innerText = getRadioText('angle') || "未設定";
-                }
-                else if (cat === 'posture') {
-                    const val = getRadioValue('posture');
-                    if (val) promptLines.push(`【基本姿勢】: ${val}`);
-                    document.getElementById('sum-posture').innerText = getRadioText('posture') || "未設定";
-                }
-                else if (cat === 'cosplay') {
-                    const val = getRadioValue('cosplay');
-                    if (val) promptLines.push(`【服装・コスプレ】: ${val}`);
-                    document.getElementById('sum-cosplay').innerText = getRadioText('cosplay') || "未設定";
-                }
-                else if (cat === 'pose') {
-                    const val = getRadioValue('pose');
-                    if (val) promptLines.push(`【ポーズ・仕草】: ${val}`);
-                    document.getElementById('sum-pose').innerText = getRadioText('pose') || "未設定";
-                }
-                else if (cat === 'lighting') {
-                    const val = getRadioValue('lighting');
-                    if (val) promptLines.push(`【照明】: ${val}`);
-                    document.getElementById('sum-lighting').innerText = getRadioText('lighting') || "未設定";
-                }
-                else if (cat === 'quality') {
-                    const data = getCheckboxData('quality');
-                    if (data.vals.length > 0) promptLines.push(`【品質・画質】: ${data.vals.join("、")}`);
-                    document.getElementById('sum-quality').innerText = data.text;
-                }
-                else if (cat === 'aspect') {
-                    const val = getRadioValue('aspectRatio');
-                    if (val) promptLines.push(`【アスペクト比】: ${val}`);
-                    document.getElementById('sum-aspect').innerText = getRadioText('aspectRatio') || "未設定";
-                }
-                else if (cat === 'effect') {
-                    const data = getCheckboxData('effects');
-                    if (data.vals.length > 0) promptLines.push(`【エフェクト・装飾】: ${data.vals.join("、")}`);
-                    document.getElementById('sum-effect').innerText = data.text;
-                }
-                else if (cat === 'sticker') {
-                    const val = document.getElementById('stickerText').value.trim();
-                    if (val) {
-                        const pos = getRadioValue('stickerPos');
-                        promptLines.push(`【ステッカーテキスト】: 画面の「${pos}」にステッカー風のテキスト「${val}」を描画してください。`);
-                        document.getElementById('sum-sticker').innerText = `「${val}」`;
-                    } else {
-                        document.getElementById('sum-sticker').innerText = "未設定";
-                    }
-                }
-            });
+      const action = button.dataset.action;
 
-            document.getElementById('resultPrompt').value = promptLines.join("\n");
-        }
+      if (action === "open-modal") {
+        openModal(person.id);
+        return;
+      }
 
-        // ChatGPTへのプロンプトコピー機能
-        function copyPrompt() {
-            const textEl = document.getElementById('resultPrompt');
-            const text = textEl.value;
-            const showSuccess = () => {
-                const btn = document.querySelector('.btn-copy');
-                const originalText = btn.innerText;
-                btn.innerText = "コピーしました！";
-                btn.style.backgroundColor = "#10b981";
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.style.backgroundColor = "";
-                }, 2000);
-            };
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(showSuccess).catch(err => fallbackCopy(textEl, showSuccess));
-            } else {
-                fallbackCopy(textEl, showSuccess);
-            }
+      if (action === "delete") {
+        const displayName = person.name || "この人";
+        if (confirm(`${displayName}を削除しますか？`)) {
+          state = state.filter(p => p.id !== person.id);
+          if (activePersonId === person.id) closeModal();
+          renderPeople();
         }
-        function fallbackCopy(textEl, onSuccess) {
-            try {
-                textEl.select();
-                textEl.setSelectionRange(0, 99999);
-                const successful = document.execCommand('copy');
-                if (successful) onSuccess();
-                else alert("コピーに失敗しました。お手数ですが手動でコピーしてください。");
-            } catch (err) { alert("お使いの環境では自動コピーがサポートされていません。"); }
-            window.getSelection().removeAllRanges();
-        }
+      }
+    });
 
-        function resetForm() {
-            if(confirm("選択をすべてリセットしますか？")) {
-                document.getElementById('promptForm').reset();
-                updatePrompt();
-            }
-        }
+    els.modalItems.addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
 
-        window.onload = updatePrompt;
-    </script>
+      const person = getPersonById(activePersonId);
+      if (!person) return;
+
+      const action = button.dataset.action;
+      const itemKey = button.dataset.item;
+      if (action !== "plus" && action !== "minus") return;
+
+      const current = Number(person.counts[itemKey] || 0);
+      person.counts[itemKey] = action === "plus" ? current + 1 : Math.max(0, current - 1);
+      saveState();
+      renderPeople();
+      renderModal();
+    });
+
+
+    els.modal.addEventListener("click", event => {
+      if (event.target.dataset.action === "close-modal") closeModal();
+    });
+
+    els.modalClose.addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !els.modal.hidden) closeModal();
+    });
+
+    els.resetCountsBtn.addEventListener("click", () => {
+      if (!state.length) return;
+      if (confirm("全員の個数だけ0に戻しますか？名前は残ります。")) {
+        state = state.map(person => ({ ...person, counts: createEmptyCounts() }));
+        renderPeople();
+        if (!els.modal.hidden) renderModal();
+      }
+    });
+
+    els.clearBtn.addEventListener("click", () => {
+      if (confirm("名前と個数をすべて削除しますか？")) {
+        state = [];
+        closeModal();
+        renderPeople();
+      }
+    });
+
+    updateAddButton();
+    renderPeople();
+  </script>
 </body>
 </html>
