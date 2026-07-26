@@ -531,7 +531,7 @@
     <header>
       <div class="badge">TikTok LIVE Battle Memo</div>
       <h1>バトルアイテム<br>所持数メモ</h1>
-      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると、中央ポップアップでアイテムを＋/−できます。</p>
+      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると、中央ポップアップでアイテムを＋/−できます。＋で増やした分は5日後に自動で減ります。</p>
     </header>
 
     <section class="panel" aria-label="操作パネル">
@@ -565,8 +565,11 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "tiktok-battle-items-counter-v2";
-    const OLD_STORAGE_KEY = "tiktok-battle-items-counter-v1";
+    const STORAGE_KEY = "tiktok-battle-items-counter-v3";
+    const OLD_STORAGE_KEY = "tiktok-battle-items-counter-v2";
+    const OLDEST_STORAGE_KEY = "tiktok-battle-items-counter-v1";
+    const EXPIRATION_MS = 5 * 24 * 60 * 60 * 1000;
+    const EXPIRATION_CHECK_MS = 60 * 1000;
 
     const ITEMS = [
       { key: "glove", name: "グローブ", icon: "🥊" },
@@ -598,12 +601,32 @@
       return Object.fromEntries(ITEMS.map(item => [item.key, 0]));
     }
 
+    function createEmptyExpirations() {
+      return Object.fromEntries(ITEMS.map(item => [item.key, []]));
+    }
+
     function makePerson(name = "") {
       return {
         id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
         name,
-        counts: createEmptyCounts()
+        counts: createEmptyCounts(),
+        expirations: createEmptyExpirations()
       };
+    }
+
+    function normalizeExpirations(expirations) {
+      const empty = createEmptyExpirations();
+      const normalized = { ...empty };
+
+      ITEMS.forEach(item => {
+        const rawList = expirations && Array.isArray(expirations[item.key]) ? expirations[item.key] : [];
+        normalized[item.key] = rawList
+          .map(value => Number(value))
+          .filter(value => Number.isFinite(value) && value > 0)
+          .sort((a, b) => a - b);
+      });
+
+      return normalized;
     }
 
     function normalizePeople(saved) {
@@ -611,7 +634,8 @@
       return saved.map(person => ({
         id: person.id || String(Date.now() + Math.random()),
         name: person.name || "",
-        counts: { ...createEmptyCounts(), ...(person.counts || {}) }
+        counts: { ...createEmptyCounts(), ...(person.counts || {}) },
+        expirations: normalizeExpirations(person.expirations)
       }));
     }
 
@@ -622,6 +646,9 @@
 
         const oldSaved = normalizePeople(JSON.parse(localStorage.getItem(OLD_STORAGE_KEY)));
         if (oldSaved) return oldSaved;
+
+        const oldestSaved = normalizePeople(JSON.parse(localStorage.getItem(OLDEST_STORAGE_KEY)));
+        if (oldestSaved) return oldestSaved;
       } catch (error) {
         console.warn("保存データの読み込みに失敗しました", error);
       }
@@ -630,6 +657,62 @@
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function processExpiredIncrements() {
+      const now = Date.now();
+      let changed = false;
+
+      state = state.map(person => {
+        const counts = { ...createEmptyCounts(), ...(person.counts || {}) };
+        const expirations = normalizeExpirations(person.expirations);
+
+        ITEMS.forEach(item => {
+          const activeExpirations = [];
+          let expiredCount = 0;
+
+          expirations[item.key].forEach(expiresAt => {
+            if (expiresAt <= now) {
+              expiredCount += 1;
+            } else {
+              activeExpirations.push(expiresAt);
+            }
+          });
+
+          if (expiredCount > 0) {
+            counts[item.key] = Math.max(0, Number(counts[item.key] || 0) - expiredCount);
+            expirations[item.key] = activeExpirations;
+            changed = true;
+          }
+        });
+
+        return { ...person, counts, expirations };
+      });
+
+      if (changed) saveState();
+      return changed;
+    }
+
+    function addItemCount(person, itemKey) {
+      person.counts[itemKey] = Number(person.counts[itemKey] || 0) + 1;
+      if (!person.expirations) person.expirations = createEmptyExpirations();
+      if (!Array.isArray(person.expirations[itemKey])) person.expirations[itemKey] = [];
+      person.expirations[itemKey].push(Date.now() + EXPIRATION_MS);
+      person.expirations[itemKey].sort((a, b) => a - b);
+    }
+
+    function subtractItemCount(person, itemKey) {
+      const current = Number(person.counts[itemKey] || 0);
+      if (current <= 0) return;
+
+      person.counts[itemKey] = current - 1;
+
+      // 手動で減らした分が5日後にもう一度減らないよう、
+      // 未期限の自動減算予定を1つだけ取り消します。
+      if (person.expirations && Array.isArray(person.expirations[itemKey]) && person.expirations[itemKey].length > 0) {
+        person.expirations[itemKey].sort((a, b) => a - b);
+        person.expirations[itemKey].shift();
+      }
     }
 
     function escapeHtml(text) {
@@ -792,8 +875,12 @@
       const itemKey = button.dataset.item;
       if (action !== "plus" && action !== "minus") return;
 
-      const current = Number(person.counts[itemKey] || 0);
-      person.counts[itemKey] = action === "plus" ? current + 1 : Math.max(0, current - 1);
+      if (action === "plus") {
+        addItemCount(person, itemKey);
+      } else {
+        subtractItemCount(person, itemKey);
+      }
+
       saveState();
       renderPeople();
       renderModal();
@@ -813,7 +900,7 @@
     els.resetCountsBtn.addEventListener("click", () => {
       if (!state.length) return;
       if (confirm("全員の個数だけ0に戻しますか？名前は残ります。")) {
-        state = state.map(person => ({ ...person, counts: createEmptyCounts() }));
+        state = state.map(person => ({ ...person, counts: createEmptyCounts(), expirations: createEmptyExpirations() }));
         renderPeople();
         if (!els.modal.hidden) renderModal();
       }
@@ -827,8 +914,16 @@
       }
     });
 
+    processExpiredIncrements();
     updateAddButton();
     renderPeople();
+
+    setInterval(() => {
+      if (processExpiredIncrements()) {
+        renderPeople();
+        if (!els.modal.hidden) renderModal();
+      }
+    }, EXPIRATION_CHECK_MS);
   </script>
 </body>
 </html>
