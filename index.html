@@ -191,8 +191,8 @@
 
     .person-top {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 9px;
+      grid-template-columns: 1fr auto auto;
+      gap: 7px;
       align-items: stretch;
       padding: 10px 10px 6px;
     }
@@ -224,14 +224,25 @@
       font-weight: 800;
     }
 
+    .rename-btn,
     .delete-btn {
       width: 52px;
       min-width: 52px;
       min-height: 52px;
+      border: 1px solid var(--line);
+      font-size: 20px;
+    }
+
+    .rename-btn {
+      background: rgba(39, 245, 255, 0.14);
+      color: #dfffff;
+      border-color: rgba(39, 245, 255, 0.3);
+    }
+
+    .delete-btn {
       background: rgba(255, 94, 122, 0.18);
       color: #ffdce4;
-      border: 1px solid rgba(255, 94, 122, 0.35);
-      font-size: 20px;
+      border-color: rgba(255, 94, 122, 0.35);
     }
 
     .summary-items {
@@ -507,7 +518,7 @@
       .name-open { min-height: 46px; border-radius: 14px; padding: 6px 10px; }
       .name-text { font-size: 17px; }
       .name-hint { font-size: 10px; }
-      .delete-btn { width: 46px; min-width: 46px; min-height: 46px; border-radius: 14px; }
+      .rename-btn, .delete-btn { width: 42px; min-width: 42px; min-height: 46px; border-radius: 14px; font-size: 18px; }
       .summary-items { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; padding: 4px 8px 8px; }
       .summary-item { min-height: 28px; border-radius: 10px; gap: 1px; padding: 2px 1px; }
       .icon { min-width: 16px; height: 17px; font-size: 11px; border-radius: 6px; }
@@ -531,7 +542,7 @@
     <header>
       <div class="badge">TikTok LIVE Battle Memo</div>
       <h1>バトルアイテム<br>所持数メモ</h1>
-      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると、中央ポップアップでアイテムを＋/−できます。＋で増やした分は5日後に自動で減ります。</p>
+      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると中央ポップアップでアイテムを＋/−できます。✎ボタンで登録後の名前編集もできます。</p>
     </header>
 
     <section class="panel" aria-label="操作パネル">
@@ -758,6 +769,7 @@
               <span class="name-text">${escapeHtml(person.name || "名前未入力")}</span>
               <span class="name-hint">タップでアイテム編集</span>
             </button>
+            <button class="rename-btn" type="button" data-action="rename" aria-label="名前を編集">✎</button>
             <button class="delete-btn" type="button" data-action="delete" aria-label="この人を削除">×</button>
           </div>
           <div class="summary-items" aria-label="所持アイテム一覧">
@@ -851,6 +863,24 @@
 
       if (action === "open-modal") {
         openModal(person.id);
+        return;
+      }
+
+      if (action === "rename") {
+        const currentName = person.name || "";
+        const nextName = prompt("名前を編集してください", currentName);
+        if (nextName === null) return;
+
+        const trimmedName = nextName.trim();
+        if (!trimmedName) {
+          alert("名前を空欄にはできません。");
+          return;
+        }
+
+        person.name = trimmedName;
+        saveState();
+        renderPeople();
+        if (activePersonId === person.id && !els.modal.hidden) renderModal();
         return;
       }
 
