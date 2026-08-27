@@ -542,7 +542,7 @@
     <header>
       <div class="badge">TikTok LIVE Battle Memo</div>
       <h1>バトルアイテム<br>所持数メモ</h1>
-      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると中央ポップアップでアイテムを＋/−できます。✎ボタンで登録後の名前編集もできます。</p>
+      <p class="lead">名前の下はアイコンと数字だけ表示。名前をタップすると中央ポップアップでアイテムを＋/−できます。全アイテムが0になった名前は自動で削除されます。</p>
     </header>
 
     <section class="panel" aria-label="操作パネル">
@@ -551,7 +551,7 @@
         <button class="btn-primary" id="addBtn" type="submit" disabled>＋ 人を追加</button>
       </form>
       <div class="mini-actions">
-        <button type="button" id="resetCountsBtn">🔄 個数だけ0</button>
+        <button type="button" id="resetCountsBtn">🔄 全員0→削除</button>
         <button type="button" id="clearBtn">🗑 全削除</button>
       </div>
     </section>
@@ -700,8 +700,13 @@
         return { ...person, counts, expirations };
       });
 
-      if (changed) saveState();
-      return changed;
+      const cleanup = removeZeroPeople();
+      if (cleanup.removedActive && !els.modal.hidden) {
+        closeModal({ removeZeroActive: false, renderAfterClose: false });
+      }
+
+      if (changed || cleanup.changed) saveState();
+      return changed || cleanup.changed;
     }
 
     function addItemCount(person, itemKey) {
@@ -737,6 +742,24 @@
 
     function getPersonById(id) {
       return state.find(person => person.id === id);
+    }
+
+    function getTotalCount(person) {
+      return ITEMS.reduce((total, item) => total + Number((person.counts && person.counts[item.key]) || 0), 0);
+    }
+
+    function isZeroPerson(person) {
+      return getTotalCount(person) <= 0;
+    }
+
+    function removeZeroPeople() {
+      const beforeLength = state.length;
+      const removedActive = activePersonId && state.some(person => person.id === activePersonId && isZeroPerson(person));
+      state = state.filter(person => !isZeroPerson(person));
+      return {
+        changed: state.length !== beforeLength,
+        removedActive
+      };
     }
 
     function iconClass(item) {
@@ -821,10 +844,26 @@
       setTimeout(() => els.modalClose.focus(), 0);
     }
 
-    function closeModal() {
+    function closeModal(options = {}) {
+      const { removeZeroActive = true, renderAfterClose = true } = options;
+      let cleanupChanged = false;
+
+      if (removeZeroActive && activePersonId) {
+        const person = getPersonById(activePersonId);
+        if (person && isZeroPerson(person)) {
+          state = state.filter(p => p.id !== activePersonId);
+          cleanupChanged = true;
+        }
+      }
+
       activePersonId = null;
       els.modal.hidden = true;
       document.body.style.overflow = "";
+
+      if (cleanupChanged) {
+        saveState();
+        if (renderAfterClose) renderPeople();
+      }
     }
 
     function updateAddButton() {
@@ -911,6 +950,14 @@
         subtractItemCount(person, itemKey);
       }
 
+      if (isZeroPerson(person)) {
+        state = state.filter(p => p.id !== person.id);
+        saveState();
+        closeModal({ removeZeroActive: false, renderAfterClose: false });
+        renderPeople();
+        return;
+      }
+
       saveState();
       renderPeople();
       renderModal();
@@ -929,10 +976,10 @@
 
     els.resetCountsBtn.addEventListener("click", () => {
       if (!state.length) return;
-      if (confirm("全員の個数だけ0に戻しますか？名前は残ります。")) {
-        state = state.map(person => ({ ...person, counts: createEmptyCounts(), expirations: createEmptyExpirations() }));
+      if (confirm("全員の個数を0にして、名前も削除しますか？")) {
+        state = [];
+        closeModal({ removeZeroActive: false, renderAfterClose: false });
         renderPeople();
-        if (!els.modal.hidden) renderModal();
       }
     });
 
@@ -945,6 +992,8 @@
     });
 
     processExpiredIncrements();
+    const initialCleanup = removeZeroPeople();
+    if (initialCleanup.changed) saveState();
     updateAddButton();
     renderPeople();
 
