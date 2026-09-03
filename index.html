@@ -888,6 +888,14 @@
       .help-title { font-size: 22px; }
       .help-list li { padding: 9px 10px; font-size: 12px; }
     }
+
+    /* 無料版→サーバー版 データ引き継ぎ */
+    .transfer-btn {
+      width: 100%; min-height: 44px; margin-top: 10px;
+      border: 1px solid rgba(39,245,255,.32);
+      background: rgba(39,245,255,.11); color: #e5ffff; font-size: 13px;
+    }
+    .transfer-status { margin-top: 8px; color: rgba(255,255,255,.68); font-size: 11px; font-weight: 800; line-height: 1.5; text-align: center; }
   </style>
 </head>
 <body>
@@ -954,6 +962,8 @@
         <li><strong>残り時間確認：</strong>編集ポップアップ内のアイテム部分をタップすると、各個数の残り時間を確認できます。</li>
         <li><strong>自動削除：</strong>＋で増やしたアイテムは5日後に自動で減り、全アイテムが0になった名前は削除されます。</li>
       </ul>
+      <button class="transfer-btn" id="exportTransferBtn" type="button">💾 データ保存</button>
+      <div class="transfer-status" id="exportTransferStatus"></div>
     </section>
   </div>
 
@@ -1003,7 +1013,9 @@
       remainingClose: document.getElementById("remainingClose"),
       helpBtn: document.getElementById("helpBtn"),
       helpModal: document.getElementById("helpModal"),
-      helpClose: document.getElementById("helpClose")
+      helpClose: document.getElementById("helpClose"),
+      exportTransferBtn: document.getElementById("exportTransferBtn"),
+      exportTransferStatus: document.getElementById("exportTransferStatus")
     };
 
     let state = loadState();
@@ -1366,6 +1378,42 @@
       els.remainingModal.hidden = true;
     }
 
+    function makeTransferPayload() {
+      processExpiredIncrements();
+      const people = normalizePeople(state) || [];
+      return {
+        format: "tiktok-battle-items-transfer",
+        version: 1,
+        exportedAt: Date.now(),
+        people
+      };
+    }
+
+    function encodeTransferPayload(payload) {
+      const json = JSON.stringify(payload);
+      const bytes = new TextEncoder().encode(json);
+      let binary = "";
+      bytes.forEach(byte => binary += String.fromCharCode(byte));
+      return "TBL1-" + btoa(binary);
+    }
+
+    async function copyTransferCode() {
+      const payload = makeTransferPayload();
+      if (!payload.people.length) {
+        els.exportTransferStatus.textContent = "保存するデータがありません。";
+        return;
+      }
+      const code = encodeTransferPayload(payload);
+      try {
+        await navigator.clipboard.writeText(code);
+        const itemCount = payload.people.reduce((sum, person) => sum + ITEMS.reduce((s, item) => s + Number(person.counts?.[item.key] || 0), 0), 0);
+        els.exportTransferStatus.textContent = `${payload.people.length}人・合計${itemCount}個の保存用データをコピーしました。個数・残り時間も保存されます。`;
+      } catch (error) {
+        console.error(error);
+        els.exportTransferStatus.textContent = "コピーできませんでした。ブラウザのクリップボード許可を確認してください。";
+      }
+    }
+
     function openHelpModal() {
       els.helpModal.hidden = false;
       document.body.style.overflow = "hidden";
@@ -1503,6 +1551,7 @@
     });
 
     els.helpBtn.addEventListener("click", openHelpModal);
+    els.exportTransferBtn?.addEventListener("click", copyTransferCode);
     els.modalClose.addEventListener("click", closeModal);
     els.remainingClose.addEventListener("click", closeRemainingModal);
     els.helpClose.addEventListener("click", closeHelpModal);
