@@ -1031,6 +1031,12 @@
     let activePersonId = null;
     let activeRemainingItemKey = null;
 
+    // Google Analytics 4 カスタムイベント送信
+    function trackGaEvent(eventName, params = {}) {
+      if (typeof window.gtag !== "function") return;
+      window.gtag("event", eventName, params);
+    }
+
     function createEmptyCounts() {
       return Object.fromEntries(ITEMS.map(item => [item.key, 0]));
     }
@@ -1424,6 +1430,7 @@
     }
 
     function openHelpModal() {
+      trackGaEvent("help_open");
       els.helpModal.hidden = false;
       document.body.style.overflow = "hidden";
       setTimeout(() => els.helpClose.focus(), 0);
@@ -1450,6 +1457,12 @@
       }
       const newPerson = makePerson(name);
       state.push(newPerson);
+
+      // 名前そのものはAnalyticsへ送信しません
+      trackGaEvent("person_add", {
+        total_people: state.length
+      });
+
       els.newName.value = "";
       updateAddButton();
       renderPeople();
@@ -1518,10 +1531,29 @@
 
       if (action !== "plus" && action !== "minus") return;
 
+      const item = ITEMS.find(entry => entry.key === itemKey);
+      const beforeCount = Number(person.counts[itemKey] || 0);
+
       if (action === "plus") {
         addItemCount(person, itemKey);
+
+        trackGaEvent("item_plus", {
+          item_key: itemKey,
+          item_name: item?.name || itemKey,
+          new_count: Number(person.counts[itemKey] || 0)
+        });
       } else {
         subtractItemCount(person, itemKey);
+
+        const afterCount = Number(person.counts[itemKey] || 0);
+        // 0個の状態で「－」を押しただけの場合は送信しません
+        if (afterCount < beforeCount) {
+          trackGaEvent("item_minus", {
+            item_key: itemKey,
+            item_name: item?.name || itemKey,
+            new_count: afterCount
+          });
+        }
       }
 
       if (isZeroPerson(person)) {
