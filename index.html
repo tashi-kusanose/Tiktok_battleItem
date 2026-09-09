@@ -1758,8 +1758,9 @@
     function getShareUrl() {
       const url = new URL(`${location.origin}${location.pathname}`);
       url.searchParams.set("utm_source", "user_share");
-      url.searchParams.set("utm_medium", "share");
-      url.searchParams.set("utm_campaign", "battle_item_manager");
+      url.searchParams.set("utm_medium", "referral");
+      url.searchParams.set("utm_campaign", "live_glove_copy_202609");
+      url.searchParams.set("utm_content", "in_app_share");
       return url.toString();
     }
 
