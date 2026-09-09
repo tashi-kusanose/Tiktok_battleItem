@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/fix-live-glove-layout.yml'
+      - '.github/fix_live_glove_layout.py'
 
 permissions:
   contents: write
@@ -14,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Fix person row columns
-        run: sed -i '0,/grid-template-columns: 1fr auto auto;/s//grid-template-columns: minmax(0, 1fr) auto auto auto;/' index.html
+        run: python .github/fix_live_glove_layout.py
       - name: Commit fix
         run: |
           if git diff --quiet -- index.html; then exit 0; fi
