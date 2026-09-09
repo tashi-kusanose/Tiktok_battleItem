@@ -1,0 +1,46 @@
+name: Patch GA4 campaign tags
+
+on:
+  push:
+    paths:
+      - '.github/patch-ga4-campaign.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update share UTM tags
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          t = p.read_text(encoding='utf-8')
+          old = '''      url.searchParams.set("utm_source", "user_share");
+      url.searchParams.set("utm_medium", "share");
+      url.searchParams.set("utm_campaign", "battle_item_manager");'''
+          new = '''      url.searchParams.set("utm_source", "user_share");
+      url.searchParams.set("utm_medium", "referral");
+      url.searchParams.set("utm_campaign", "live_glove_copy_202609");
+      url.searchParams.set("utm_content", "in_app_share");'''
+          if old not in t:
+              if 'utm_campaign", "live_glove_copy_202609' in t:
+                  print('Already updated')
+                  raise SystemExit(0)
+              raise SystemExit('UTM anchor not found')
+          p.write_text(t.replace(old, new, 1), encoding='utf-8')
+          print('Updated GA4 share UTM tags')
+          PY
+      - name: Commit update
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Align referral UTM tags for live glove campaign"
+          git push
