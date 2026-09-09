@@ -24,30 +24,17 @@ jobs:
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
 
-          old = '''    function getShareUrl() {
-              return `${location.origin}${location.pathname}`;
-            }'''
-          old_normal = '''    function getShareUrl() {
-      return `${location.origin}${location.pathname}`;
-    }'''
-          new = '''    function getShareUrl() {
-      const url = new URL(`${location.origin}${location.pathname}`);
-      url.searchParams.set("utm_source", "user_share");
-      url.searchParams.set("utm_medium", "share");
-      url.searchParams.set("utm_campaign", "battle_item_manager");
-      return url.toString();
-    }'''
+          old = "    function getShareUrl() {\n      return `${location.origin}${location.pathname}`;\n    }"
+          new = "    function getShareUrl() {\n      const url = new URL(`${location.origin}${location.pathname}`);\n      url.searchParams.set(\"utm_source\", \"user_share\");\n      url.searchParams.set(\"utm_medium\", \"share\");\n      url.searchParams.set(\"utm_campaign\", \"battle_item_manager\");\n      return url.toString();\n    }"
 
-          if 'utm_source", "user_share' in text:
+          if 'utm_source\", \"user_share' in text:
               print('UTM attribution is already present; no change needed.')
               raise SystemExit(0)
 
-          target = old_normal if old_normal in text else old
-          if target not in text:
+          if old not in text:
               raise SystemExit('Target getShareUrl() implementation was not found; refusing to modify the file.')
 
-          text = text.replace(target, new, 1)
-          path.write_text(text, encoding='utf-8')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
           print('Patched getShareUrl() successfully.')
           PY
 
