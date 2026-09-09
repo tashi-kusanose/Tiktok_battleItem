@@ -1735,7 +1735,11 @@
     }
 
     function getShareUrl() {
-      return `${location.origin}${location.pathname}`;
+      const url = new URL(`${location.origin}${location.pathname}`);
+      url.searchParams.set("utm_source", "user_share");
+      url.searchParams.set("utm_medium", "share");
+      url.searchParams.set("utm_campaign", "battle_item_manager");
+      return url.toString();
     }
 
     function normalizedFrameName() {
