@@ -119,6 +119,225 @@
       line-height: 1;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .share-open {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 42px;
+      margin-top: 12px;
+      padding: 0 18px;
+      border: 1px solid rgba(39, 245, 255, 0.34);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,79,216,.20), rgba(39,245,255,.16));
+      color: #fff;
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.05), 0 8px 24px rgba(39,245,255,.08);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .share-open::before {
+      content: "↗";
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--cyan));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .share-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      display: grid;
+      place-items: center;
+      padding: max(16px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
+    }
+
+    .share-modal[hidden] { display: none; }
+
+    .share-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3,1,12,.68);
+      backdrop-filter: blur(7px);
+    }
+
+    .share-sheet {
+      position: relative;
+      width: min(500px, 100%);
+      max-height: min(86vh, 760px);
+      overflow: auto;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,79,216,.22), transparent 30%),
+        radial-gradient(circle at 100% 0%, rgba(39,245,255,.18), transparent 32%),
+        rgba(18,8,32,.98);
+      box-shadow: 0 28px 90px rgba(0,0,0,.62);
+      padding: 15px;
+    }
+
+    .share-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .share-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 950;
+      letter-spacing: -.04em;
+    }
+
+    .share-close {
+      width: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.11);
+      font-size: 20px;
+    }
+
+    .share-intro {
+      margin: -2px 0 12px;
+      color: rgba(255,255,255,.68);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .share-field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .share-field label {
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .share-field input {
+      min-height: 44px;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .share-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .share-tab {
+      min-height: 40px;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: rgba(255,255,255,.74);
+      background: rgba(255,255,255,.07);
+      font-size: 11px;
+    }
+
+    .share-tab.is-active {
+      color: #fff;
+      border-color: rgba(39,245,255,.48);
+      background: linear-gradient(135deg, rgba(255,79,216,.24), rgba(39,245,255,.18));
+      box-shadow: inset 0 0 15px rgba(39,245,255,.08);
+    }
+
+    .share-text {
+      width: 100%;
+      min-height: 176px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      font: 750 13px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      outline: none;
+    }
+
+    .share-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 9px;
+    }
+
+    .share-primary {
+      background: linear-gradient(135deg, var(--pink), #8a5cff 55%, var(--cyan));
+      box-shadow: 0 10px 25px rgba(255,79,216,.18);
+    }
+
+    .share-secondary {
+      border: 1px solid rgba(39,245,255,.28);
+      background: rgba(39,245,255,.10);
+      color: #eaffff;
+    }
+
+    .share-divider {
+      height: 1px;
+      margin: 14px 0;
+      background: rgba(255,255,255,.13);
+    }
+
+    .share-subtitle {
+      margin: 0 0 5px;
+      font-size: 17px;
+      font-weight: 950;
+    }
+
+    .share-note {
+      margin: 0 0 10px;
+      color: rgba(255,255,255,.58);
+      font-size: 11px;
+      font-weight: 750;
+      line-height: 1.55;
+    }
+
+    .share-preview {
+      display: block;
+      width: min(240px, 72%);
+      margin: 12px auto 0;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 14px 34px rgba(0,0,0,.30);
+    }
+
+    .share-preview[hidden] { display: none; }
+
+    .share-status {
+      min-height: 18px;
+      margin-top: 9px;
+      color: rgba(255,255,255,.70);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: center;
+    }
+
     .panel {
       position: sticky;
       top: 8px;
@@ -893,6 +1112,12 @@
       .remaining-row { min-height: 38px; padding: 8px; border-radius: 13px; }
       .remaining-time { font-size: 16px; }
       .help-open { min-height: 38px; margin-top: 8px; padding: 0 14px; font-size: 13px; }
+      .share-open { min-height: 38px; margin-top: 8px; padding: 0 14px; font-size: 13px; }
+      .share-sheet { border-radius: 22px; padding: 12px; }
+      .share-title { font-size: 22px; }
+      .share-tabs { gap: 5px; }
+      .share-tab { min-height: 38px; font-size: 10px; }
+      .share-text { min-height: 168px; font-size: 12px; }
       .help-sheet { border-radius: 22px; padding: 12px; }
       .help-title { font-size: 22px; }
       .help-list li { padding: 9px 10px; font-size: 12px; }
@@ -912,7 +1137,10 @@
     <header>
       <div class="badge">TikTok LIVE Battle Memo</div>
       <h1>バトルアイテム管理</h1>
-      <button class="help-open" id="helpBtn" type="button">使い方</button>
+      <div class="header-actions">
+        <button class="help-open" id="helpBtn" type="button">使い方</button>
+        <button class="share-open" id="shareBtn" type="button">このツールを紹介</button>
+      </div>
     </header>
 
     <section class="panel" aria-label="操作パネル">
@@ -976,6 +1204,46 @@
     </section>
   </div>
 
+
+  <div class="share-modal" id="shareModal" hidden>
+    <div class="share-backdrop" data-action="close-share"></div>
+    <section class="share-sheet" role="dialog" aria-modal="true" aria-label="このツールを紹介">
+      <div class="share-head">
+        <p class="share-title">📣 このツールを紹介</p>
+        <button class="share-close" type="button" id="shareClose" aria-label="閉じる">×</button>
+      </div>
+      <p class="share-intro">文章はワンタップでコピーできます。推し枠名を入れると、紹介文と9:16画像に自動反映します。</p>
+
+      <div class="share-field">
+        <label for="shareFrameName">推し枠名・配信者名（任意）</label>
+        <input id="shareFrameName" type="text" placeholder="例：○○さん" autocomplete="off" />
+      </div>
+
+      <div class="share-tabs" role="tablist" aria-label="紹介文の種類">
+        <button class="share-tab is-active" type="button" data-share-template="oshi">推し枠向け</button>
+        <button class="share-tab" type="button" data-share-template="listener">リスナー仲間</button>
+        <button class="share-tab" type="button" data-share-template="streamer">配信者向け</button>
+      </div>
+
+      <textarea class="share-text" id="shareText" readonly aria-label="紹介文"></textarea>
+      <div class="share-actions">
+        <button class="share-primary" id="copyShareTextBtn" type="button">📋 文章をコピー</button>
+        <button class="share-secondary" id="nativeShareBtn" type="button">↗ 共有する</button>
+      </div>
+
+      <div class="share-divider"></div>
+      <p class="share-subtitle">ストーリー用画像</p>
+      <p class="share-note">1080×1920の9:16画像を自動作成します。現在管理中の名前・所持数などのデータは画像に出しません。</p>
+      <button class="share-primary" id="generateShareImageBtn" type="button">🖼 9:16紹介画像を作る</button>
+      <img class="share-preview" id="shareImagePreview" alt="紹介画像プレビュー" hidden />
+      <div class="share-actions" id="shareImageActions" hidden>
+        <button class="share-secondary" id="downloadShareImageBtn" type="button">⬇ 画像を保存</button>
+        <button class="share-secondary" id="shareImageBtn" type="button">↗ 画像を共有</button>
+      </div>
+      <div class="share-status" id="shareStatus" aria-live="polite"></div>
+    </section>
+  </div>
+
   <script>
     const STORAGE_KEY = "tiktok-battle-items-counter-v3";
     const OLD_STORAGE_KEY = "tiktok-battle-items-counter-v2";
@@ -1024,12 +1292,28 @@
       helpModal: document.getElementById("helpModal"),
       helpClose: document.getElementById("helpClose"),
       exportTransferBtn: document.getElementById("exportTransferBtn"),
-      exportTransferStatus: document.getElementById("exportTransferStatus")
+      exportTransferStatus: document.getElementById("exportTransferStatus"),
+      shareBtn: document.getElementById("shareBtn"),
+      shareModal: document.getElementById("shareModal"),
+      shareClose: document.getElementById("shareClose"),
+      shareFrameName: document.getElementById("shareFrameName"),
+      shareText: document.getElementById("shareText"),
+      copyShareTextBtn: document.getElementById("copyShareTextBtn"),
+      nativeShareBtn: document.getElementById("nativeShareBtn"),
+      generateShareImageBtn: document.getElementById("generateShareImageBtn"),
+      shareImagePreview: document.getElementById("shareImagePreview"),
+      shareImageActions: document.getElementById("shareImageActions"),
+      downloadShareImageBtn: document.getElementById("downloadShareImageBtn"),
+      shareImageBtn: document.getElementById("shareImageBtn"),
+      shareStatus: document.getElementById("shareStatus")
     };
 
     let state = loadState();
     let activePersonId = null;
     let activeRemainingItemKey = null;
+    let activeShareTemplate = "oshi";
+    let generatedShareBlob = null;
+    let generatedShareObjectUrl = "";
 
     // Google Analytics 4 カスタムイベント送信
     function trackGaEvent(eventName, params = {}) {
@@ -1441,6 +1725,338 @@
       if (els.modal.hidden) document.body.style.overflow = "";
     }
 
+
+    function trackShareEvent(name, params = {}) {
+      try {
+        if (typeof gtag === "function") gtag("event", name, params);
+      } catch (error) {
+        console.debug("analytics unavailable", error);
+      }
+    }
+
+    function getShareUrl() {
+      return `${location.origin}${location.pathname}`;
+    }
+
+    function normalizedFrameName() {
+      return els.shareFrameName.value.trim().replace(/枠$/, "");
+    }
+
+    function buildShareText(template = activeShareTemplate) {
+      const frameName = normalizedFrameName();
+      const frameLabel = frameName ? `${frameName}枠` : "推し枠";
+      const url = getShareUrl();
+
+      if (template === "listener") {
+        return `TikTok LIVEのバトル前、「誰が🥊持ってたっけ？」の確認に使ってる無料ツールです✨\n\n名前ごとにアイテム数をまとめて管理できて、同じアイテムを複数持っていても1個ずつ残り時間を確認できます。\n\n単推しの方の枠管理や、リスナー同士の確認用にも便利です🥊\nインストール不要・ブラウザですぐ使えます👇\n${url}`;
+      }
+
+      if (template === "streamer") {
+        return `TikTok LIVEのバトル準備に使える無料のアイテム管理ツールです🥊\n\n「誰が何を持ってる？」「あとどのくらい残ってる？」を名前ごとにまとめて確認できます。\n同じアイテムを複数持っている場合も、それぞれの残り時間を確認できます✨\n\nバトル前の作戦確認用メモにどうぞ！\nインストール不要・ブラウザですぐ使えます👇\n${url}`;
+      }
+
+      return `${frameLabel}のバトルアイテム管理に使ってます🥊\n\nバトル前に「誰が何を持ってる？」をすぐ確認できるように、自分用メモとして管理しています。\n同じアイテムを複数持っていても、それぞれの残り時間まで確認できるので便利です✨\n\n無料・インストール不要でブラウザから使えます👇\n${url}`;
+    }
+
+    function renderShareText() {
+      els.shareText.value = buildShareText();
+      document.querySelectorAll("[data-share-template]").forEach(button => {
+        button.classList.toggle("is-active", button.dataset.shareTemplate === activeShareTemplate);
+      });
+    }
+
+    function openShareModal() {
+      renderShareText();
+      els.shareStatus.textContent = "";
+      els.shareModal.hidden = false;
+      document.body.style.overflow = "hidden";
+      setTimeout(() => els.shareClose.focus(), 0);
+      trackShareEvent("share_modal_open");
+    }
+
+    function closeShareModal() {
+      els.shareModal.hidden = true;
+      if (els.helpModal.hidden && els.modal.hidden && els.remainingModal.hidden) document.body.style.overflow = "";
+    }
+
+    async function copyTextWithFallback(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    async function copyShareText() {
+      try {
+        await copyTextWithFallback(buildShareText());
+        els.shareStatus.textContent = "紹介文をコピーしました。TikTok・DM・LINEなどにそのまま貼れます。";
+        trackShareEvent("share_text_copy", { share_template: activeShareTemplate });
+      } catch (error) {
+        console.error(error);
+        els.shareStatus.textContent = "コピーできませんでした。文章を長押ししてコピーしてください。";
+      }
+    }
+
+    async function nativeShareText() {
+      const text = buildShareText().replace(`\n${getShareUrl()}`, "");
+      if (!navigator.share) {
+        await copyShareText();
+        els.shareStatus.textContent = "このブラウザでは共有画面を開けないため、紹介文をコピーしました。";
+        return;
+      }
+      try {
+        await navigator.share({
+          title: "TikTok LIVE Battle Memo",
+          text,
+          url: getShareUrl()
+        });
+        els.shareStatus.textContent = "共有画面を開きました。";
+        trackShareEvent("share_native", { share_template: activeShareTemplate });
+      } catch (error) {
+        if (error && error.name !== "AbortError") console.error(error);
+      }
+    }
+
+    function roundedRectPath(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + width, y, x + width, y + height, r);
+      ctx.arcTo(x + width, y + height, x, y + height, r);
+      ctx.arcTo(x, y + height, x, y, r);
+      ctx.arcTo(x, y, x + width, y, r);
+      ctx.closePath();
+    }
+
+    function fillRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
+      ctx.save();
+      roundedRectPath(ctx, x, y, width, height, radius);
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function strokeRoundedRect(ctx, x, y, width, height, radius, strokeStyle, lineWidth = 2) {
+      ctx.save();
+      roundedRectPath(ctx, x, y, width, height, radius);
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawCenteredText(ctx, text, y, font, color, maxWidth = 940) {
+      ctx.save();
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, 540, y, maxWidth);
+      ctx.restore();
+    }
+
+    function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, options = {}) {
+      const { font = "700 38px system-ui, sans-serif", color = "#10152f", align = "left", maxLines = 4 } = options;
+      ctx.save();
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.textBaseline = "top";
+      const chars = Array.from(text);
+      const lines = [];
+      let line = "";
+      chars.forEach(char => {
+        const test = line + char;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = char;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
+      lines.slice(0, maxLines).forEach((entry, index) => {
+        ctx.fillText(entry, x, y + index * lineHeight, maxWidth);
+      });
+      ctx.restore();
+      return Math.min(lines.length, maxLines) * lineHeight;
+    }
+
+    function loadCanvasImage(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+      });
+    }
+
+    async function generateShareImageBlob() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const softPink = ctx.createRadialGradient(120, 100, 0, 120, 100, 460);
+      softPink.addColorStop(0, "rgba(255,79,216,.20)");
+      softPink.addColorStop(1, "rgba(255,79,216,0)");
+      ctx.fillStyle = softPink;
+      ctx.fillRect(0, 0, 580, 540);
+
+      const softCyan = ctx.createRadialGradient(960, 260, 0, 960, 260, 440);
+      softCyan.addColorStop(0, "rgba(39,245,255,.20)");
+      softCyan.addColorStop(1, "rgba(39,245,255,0)");
+      ctx.fillStyle = softCyan;
+      ctx.fillRect(500, 0, 580, 650);
+
+      const badgeGradient = ctx.createLinearGradient(260, 0, 820, 0);
+      badgeGradient.addColorStop(0, "#ff4fd8");
+      badgeGradient.addColorStop(.55, "#8a5cff");
+      badgeGradient.addColorStop(1, "#27cfea");
+      fillRoundedRect(ctx, 250, 82, 580, 82, 41, badgeGradient);
+      drawCenteredText(ctx, "TikTok LIVE Battle Memo", 123, "900 34px system-ui, sans-serif", "#ffffff", 520);
+
+      drawCenteredText(ctx, "バトルアイテム管理", 248, "950 76px system-ui, sans-serif", "#10152f", 980);
+      drawCenteredText(ctx, "無料版", 338, "950 56px system-ui, sans-serif", "#ff2f9f", 500);
+
+      const frameName = normalizedFrameName();
+      const mainMessage = frameName ? `${frameName}枠で使ってます！` : "推し枠の管理に使ってます！";
+      fillRoundedRect(ctx, 90, 415, 900, 125, 34, "#f4f6ff");
+      strokeRoundedRect(ctx, 90, 415, 900, 125, 34, "#d7dcff", 3);
+      drawCenteredText(ctx, mainMessage, 477, "950 52px system-ui, sans-serif", "#3b35a8", 820);
+
+      // App-like dark card.
+      const cardGradient = ctx.createLinearGradient(0, 610, 0, 1085);
+      cardGradient.addColorStop(0, "#25104a");
+      cardGradient.addColorStop(1, "#100822");
+      fillRoundedRect(ctx, 90, 600, 900, 500, 42, cardGradient);
+      strokeRoundedRect(ctx, 90, 600, 900, 500, 42, "rgba(138,92,255,.55)", 4);
+      drawCenteredText(ctx, "バトル前の『誰が何持ってる？』を", 678, "900 40px system-ui, sans-serif", "#ffffff", 810);
+      drawCenteredText(ctx, "すぐ確認できる自分用メモ", 730, "950 46px system-ui, sans-serif", "#62efff", 820);
+
+      const iconKeys = ["glove", "secretGlove", "booster2", "booster3", "mist", "timer", "hammer"];
+      const iconImages = await Promise.all(iconKeys.map(key => loadCanvasImage(ITEM_ICONS[key]).catch(() => null)));
+      const iconStartX = 145;
+      const iconY = 800;
+      const iconGap = 112;
+      iconImages.forEach((image, index) => {
+        const x = iconStartX + index * iconGap;
+        fillRoundedRect(ctx, x - 30, iconY - 28, 88, 98, 22, "rgba(255,255,255,.10)");
+        strokeRoundedRect(ctx, x - 30, iconY - 28, 88, 98, 22, "rgba(255,255,255,.16)", 2);
+        if (image) ctx.drawImage(image, x - 14, iconY - 10, 56, 56);
+        ctx.save();
+        ctx.font = "900 24px system-ui, sans-serif";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.fillText(index % 3 === 0 ? "1" : "0", x + 14, iconY + 58);
+        ctx.restore();
+      });
+
+      const features = [
+        ["👥", "名前ごとにアイテムをまとめて管理"],
+        ["⏱", "同じアイテムを複数持っても、1個ずつ残り時間を確認"],
+        ["🌐", "ブラウザ保存・インストール不要"],
+      ];
+      let featureY = 1145;
+      features.forEach(([emoji, label], index) => {
+        fillRoundedRect(ctx, 90, featureY, 900, 150, 32, index === 1 ? "#eefbff" : "#f8f5ff");
+        strokeRoundedRect(ctx, 90, featureY, 900, 150, 32, index === 1 ? "#a7edf7" : "#ddd2ff", 3);
+        ctx.save();
+        ctx.font = "54px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(emoji, 165, featureY + 75);
+        ctx.restore();
+        drawWrappedText(ctx, label, 235, featureY + 40, 690, 48, { font: "900 36px system-ui, sans-serif", color: "#11152f", maxLines: 2 });
+        featureY += 172;
+      });
+
+      const ctaGradient = ctx.createLinearGradient(110, 0, 970, 0);
+      ctaGradient.addColorStop(0, "#ff4fd8");
+      ctaGradient.addColorStop(.55, "#8a5cff");
+      ctaGradient.addColorStop(1, "#18cdea");
+      fillRoundedRect(ctx, 90, 1680, 900, 112, 56, ctaGradient);
+      drawCenteredText(ctx, "無料で使えます！", 1735, "950 50px system-ui, sans-serif", "#ffffff", 780);
+
+      const url = getShareUrl();
+      drawCenteredText(ctx, url, 1830, "800 28px system-ui, sans-serif", "#38406a", 930);
+      drawCenteredText(ctx, "※紹介画像には管理中の名前・所持数は表示しません", 1882, "700 21px system-ui, sans-serif", "#777f9c", 900);
+
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("画像を作成できませんでした")), "image/png", 0.96);
+      });
+    }
+
+    async function generateShareImage() {
+      els.shareStatus.textContent = "紹介画像を作成しています…";
+      els.generateShareImageBtn.disabled = true;
+      try {
+        generatedShareBlob = await generateShareImageBlob();
+        if (generatedShareObjectUrl) URL.revokeObjectURL(generatedShareObjectUrl);
+        generatedShareObjectUrl = URL.createObjectURL(generatedShareBlob);
+        els.shareImagePreview.src = generatedShareObjectUrl;
+        els.shareImagePreview.hidden = false;
+        els.shareImageActions.hidden = false;
+        els.shareStatus.textContent = "9:16紹介画像を作成しました。保存または共有できます。";
+        trackShareEvent("share_image_generate", { has_frame_name: normalizedFrameName() ? "yes" : "no" });
+      } catch (error) {
+        console.error(error);
+        els.shareStatus.textContent = "画像を作成できませんでした。もう一度お試しください。";
+      } finally {
+        els.generateShareImageBtn.disabled = false;
+      }
+    }
+
+    function shareImageFileName() {
+      const frameName = normalizedFrameName();
+      return `${frameName ? frameName + "_" : ""}TikTokLIVE_BattleMemo_紹介.png`;
+    }
+
+    function downloadShareImage() {
+      if (!generatedShareBlob || !generatedShareObjectUrl) return;
+      const link = document.createElement("a");
+      link.href = generatedShareObjectUrl;
+      link.download = shareImageFileName();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      els.shareStatus.textContent = "紹介画像を保存しました。";
+      trackShareEvent("share_image_download");
+    }
+
+    async function nativeShareImage() {
+      if (!generatedShareBlob) return;
+      const file = new File([generatedShareBlob], shareImageFileName(), { type: "image/png" });
+      if (!navigator.share || !navigator.canShare || !navigator.canShare({ files: [file] })) {
+        downloadShareImage();
+        els.shareStatus.textContent = "このブラウザでは画像の直接共有に対応していないため、画像を保存しました。";
+        return;
+      }
+      try {
+        await navigator.share({
+          title: "TikTok LIVE Battle Memo",
+          text: "バトルアイテム管理の無料版です🥊",
+          files: [file]
+        });
+        els.shareStatus.textContent = "画像の共有画面を開きました。";
+        trackShareEvent("share_image_native");
+      } catch (error) {
+        if (error && error.name !== "AbortError") console.error(error);
+      }
+    }
+
     function updateAddButton() {
       els.addBtn.disabled = els.newName.value.trim().length === 0;
     }
@@ -1591,6 +2207,37 @@
       if (event.target.dataset.action === "close-help") closeHelpModal();
     });
 
+    els.shareModal.addEventListener("click", event => {
+      if (event.target.dataset.action === "close-share") closeShareModal();
+      const templateButton = event.target.closest("[data-share-template]");
+      if (templateButton) {
+        activeShareTemplate = templateButton.dataset.shareTemplate || "oshi";
+        renderShareText();
+        trackShareEvent("share_template_select", { share_template: activeShareTemplate });
+      }
+    });
+
+    els.shareBtn.addEventListener("click", openShareModal);
+    els.shareClose.addEventListener("click", closeShareModal);
+    els.shareFrameName.addEventListener("input", () => {
+      renderShareText();
+      if (!els.shareImagePreview.hidden) {
+        els.shareImagePreview.hidden = true;
+        els.shareImageActions.hidden = true;
+        generatedShareBlob = null;
+        if (generatedShareObjectUrl) {
+          URL.revokeObjectURL(generatedShareObjectUrl);
+          generatedShareObjectUrl = "";
+        }
+        els.shareStatus.textContent = "枠名を変更したため、画像を作り直してください。";
+      }
+    });
+    els.copyShareTextBtn.addEventListener("click", copyShareText);
+    els.nativeShareBtn.addEventListener("click", nativeShareText);
+    els.generateShareImageBtn.addEventListener("click", generateShareImage);
+    els.downloadShareImageBtn.addEventListener("click", downloadShareImage);
+    els.shareImageBtn.addEventListener("click", nativeShareImage);
+
     els.helpBtn.addEventListener("click", openHelpModal);
     els.exportTransferBtn?.addEventListener("click", copyTransferCode);
     els.modalClose.addEventListener("click", closeModal);
@@ -1599,6 +2246,10 @@
 
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
+      if (!els.shareModal.hidden) {
+        closeShareModal();
+        return;
+      }
       if (!els.helpModal.hidden) {
         closeHelpModal();
         return;
