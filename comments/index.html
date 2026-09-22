@@ -29,18 +29,23 @@
     .wrap{
       width:min(100%,760px);
       margin:0 auto;
-      padding:18px 14px 64px;
+      padding:0 14px 64px;
+    }
+    .sticky-shell{
+      position:sticky;
+      top:0;
+      z-index:40;
+      padding:8px 0 12px;
+      background:#0f0f10;
     }
     .hero{
-      background:linear-gradient(135deg,#202025,#141416);
+      background:#18181c;
       border:1px solid var(--line);
       border-radius:20px;
       padding:18px;
-      box-shadow:0 12px 40px rgba(0,0,0,.28);
-      position:sticky;
-      top:8px;
-      z-index:20;
-      backdrop-filter:blur(12px);
+      box-shadow:0 12px 40px rgba(0,0,0,.34);
+      position:relative;
+      z-index:2;
     }
     .title{
       font-size:20px;
@@ -74,7 +79,7 @@
       font-weight:700;
       white-space:nowrap;
     }
-    section{scroll-margin-top:138px;margin-top:24px}
+    section{scroll-margin-top:170px;margin-top:24px}
     .section-head{
       display:flex;
       align-items:end;
@@ -183,16 +188,19 @@
 </head>
 <body>
   <main class="wrap">
-    <header class="hero">
-      <h1 class="title">🌼🎙💋 一ノ瀬なつみ｜TikTok LIVE 定期コメント</h1>
-      <p class="sub">使いたいコメントの「コピー」ボタンを押すだけ。スマホでリスナーさんがすぐ使えるようにまとめています。</p>
-      <nav class="nav">
-        <a href="#normal">通常配信</a>
-        <a href="#battle">⚔️ バトル開始</a>
-        <a href="#rose">🌹 ちょんちょん</a>
-        <a href="#last">🥊 ラスト</a>
-      </nav>
-    </header>
+    <div class="sticky-shell">
+      <header class="hero">
+        <h1 class="title">🌼🎙💋 一ノ瀬なつみ｜TikTok LIVE 定期コメント</h1>
+        <p class="sub">使いたいコメントの「コピー」ボタンを押すだけ。コピーした定期やキラコメは、キーボードアプリの辞書に追加しておくと配信中すぐに呼び出せます。</p>
+        <nav class="nav">
+          <a href="#normal">通常配信</a>
+          <a href="#battle">⚔️ バトル開始</a>
+          <a href="#rose">🌹 ちょんちょん</a>
+          <a href="#last">🥊 ラスト</a>
+          <a href="#song">🎤 歌キラコメ</a>
+        </nav>
+      </header>
+    </div>
 
     <section id="normal">
       <div class="section-head">
@@ -265,6 +273,37 @@
         <article class="card"><div class="label">ラスト②</div><div class="comment">🥊ラスト1個🥊 最後にお願いします🔥✨ 🌼🎙💋一ノ瀬なつみ🌼🎙💋</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
         <article class="card"><div class="label">ラスト③</div><div class="comment">🔥ラストスパート🔥 🥊1個お願いします⚔️ 🌼🎙💋一ノ瀬なつみ🌼🎙💋</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
         <article class="card"><div class="label">ラスト④</div><div class="comment">🚨ラスト勝負🚨 🥊1個お願いします🔥 最後まで一緒に⚔️</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+      </div>
+    </section>
+
+
+    <section id="song">
+      <div class="section-head">
+        <h2>🎤 歌タイム・キラコメ</h2>
+        <div class="count">18コメント</div>
+      </div>
+      <div class="group-actions"><button class="copy-all" data-target="song">このカテゴリを全部コピー</button></div>
+      <div class="cards">
+        <article class="card"><div class="label">① 超短文・キラコメ1</div><div class="comment">✨🌼🎙💋✨🌼🎙💋✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">① 超短文・キラコメ2</div><div class="comment">🌼🎙💋✨🌼🎙💋✨🌼🎙💋</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">① 超短文・キラコメ3</div><div class="comment">🎶🌼🎙💋🎶🌼🎙💋🎶</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">① 超短文・キラコメ4</div><div class="comment">💖🌼🎙💋✨🌼🎙💋💖</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">① 超短文・キラコメ5</div><div class="comment">🌼✨🎙✨💋✨🌼✨🎙✨💋</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">① 超短文・キラコメ6</div><div class="comment">🌼🎙💋🌼🎙💋🌼🎙💋✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+
+        <article class="card"><div class="label">② 盛り上がる曲向け1</div><div class="comment">🔥🎶🌼🎙💋🌼🎙💋🎶🔥</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">② 盛り上がる曲向け2</div><div class="comment">✨ノリノリ〜✨ 🌼🎙💋🌼🎙💋 🎤🎶</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">② 盛り上がる曲向け3</div><div class="comment">🌼🎙💋キラキラ全開✨ みんなで盛り上がろう🔥</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">② 盛り上がる曲向け4</div><div class="comment">🎤💗最高〜！🌼🎙💋🌼🎙💋✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">② 盛り上がる曲向け5</div><div class="comment">👏✨🌼🎙💋✨👏 🌼🎙💋 歌タイム🎶</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">② 盛り上がる曲向け6</div><div class="comment">🔥🌼🎙💋🔥 まだまだいくよ〜🎤✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+
+        <article class="card"><div class="label">③ しっとり曲向け1</div><div class="comment">🌙✨🌼🎙💋✨🌼🎙💋🌙</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">③ しっとり曲向け2</div><div class="comment">💫🌼🎙💋 きれいな歌声にキラコメを✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">③ しっとり曲向け3</div><div class="comment">🫧🌼🎙💋🫧 ゆっくり聴いていってね✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">③ しっとり曲向け4</div><div class="comment">✨🎤🌼🎙💋 優しい歌声にうっとり💗</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">③ しっとり曲向け5</div><div class="comment">🌙🎶🌼🎙💋🌼🎙💋✨</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
+        <article class="card"><div class="label">③ しっとり曲向け6</div><div class="comment">💗🌼🎙💋✨素敵な歌声ありがとう✨🌼🎙💋</div><div class="actions"><button class="copy-btn">コピー</button></div></article>
       </div>
     </section>
 
