@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "settings": {
+    "name": "一ノ瀬なつみ",
+    "mark": "🌼🎙💋",
+    "title": "定期コメント",
+    "accent": "#ff3b6a",
+    "gift": "🌹",
+    "goal": "10000",
+    "current": "",
+    "peopleGoal": "10",
+    "peopleCurrent": ""
+  },
+  "categories": [
+    {
+      "id": "normal",
+      "name": "通常配信",
+      "visible": true
+    },
+    {
+      "id": "battle",
+      "name": "⚔️ バトル開始",
+      "visible": true
+    },
+    {
+      "id": "rose",
+      "name": "🌹 ちょんちょん",
+      "visible": true
+    },
+    {
+      "id": "last",
+      "name": "🥊 ラスト",
+      "visible": true
+    },
+    {
+      "id": "song",
+      "name": "🎤 歌キラコメ",
+      "visible": true
+    }
+  ],
+  "comments": [
+    {
+      "id": "m1",
+      "category": "normal",
+      "title": "通常①",
+      "text": "{{推しマ}}{{名前}}{{推しマ}} ギフト{{目標数}}本＆1K貢献{{目標人数}}人目標🔥 応援よろしくお願いします✨",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m2",
+      "category": "normal",
+      "title": "通常②",
+      "text": "🔥本日の目標🔥 {{ギフト}}ギフト{{目標数}}本｜1K貢献{{目標人数}}人✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m3",
+      "category": "normal",
+      "title": "通常③",
+      "text": "{{ギフト}}ギフト{{目標数}}本集めてます{{ギフト}} 1K貢献{{目標人数}}人も目標🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m4",
+      "category": "normal",
+      "title": "初見さん向け①",
+      "text": "✨初見さん大歓迎✨ {{推しマ}}{{名前}}{{推しマ}} 気軽にコメントしてね💗",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m5",
+      "category": "normal",
+      "title": "初見さん向け②",
+      "text": "{{ギフト}}初見さんいらっしゃい{{ギフト}} {{推しマ}}{{名前}}{{推しマ}} LIVE✨ ゆっくりしていってね☺️",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m6",
+      "category": "normal",
+      "title": "初見さん向け③",
+      "text": "👀初見さんも大歓迎💗 {{ギフト}}ギフト{{目標数}}本目標に挑戦中🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m7",
+      "category": "normal",
+      "title": "応援お願い①",
+      "text": "{{ギフト}}目指せギフト{{目標数}}本{{ギフト}} みんなの応援が力になります🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m8",
+      "category": "normal",
+      "title": "応援お願い②",
+      "text": "🔥1K貢献{{目標人数}}人目標🔥 一緒に達成してくれる仲間募集中✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m9",
+      "category": "normal",
+      "title": "応援お願い③",
+      "text": "💗あなたの応援が力になります💗 {{ギフト}}ギフト{{目標数}}本チャレンジ中🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m10",
+      "category": "normal",
+      "title": "1K貢献①",
+      "text": "🔥1K貢献{{目標人数}}人チャレンジ🔥 少しでも大歓迎✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m11",
+      "category": "normal",
+      "title": "1K貢献②",
+      "text": "{{ギフト}}1K貢献{{目標人数}}人目標{{ギフト}} 一緒に目標達成しよう🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m12",
+      "category": "normal",
+      "title": "進捗報告①",
+      "text": "{{ギフト}}現在ギフト{{現在数}}本{{ギフト}} 目標{{目標数}}本まであと{{残り数}}本🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": false,
+      "pinned": false
+    },
+    {
+      "id": "m13",
+      "category": "normal",
+      "title": "進捗報告②",
+      "text": "🔥1K貢献 現在{{現在人数}}人／{{目標人数}}人🔥 あと{{残り人数}}人✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": false,
+      "pinned": false
+    },
+    {
+      "id": "m14",
+      "category": "normal",
+      "title": "終盤用①",
+      "text": "🚨目標まであと少し🚨 {{ギフト}}ギフト{{目標数}}本まであと{{残り数}}本🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": false,
+      "pinned": false
+    },
+    {
+      "id": "m15",
+      "category": "normal",
+      "title": "終盤用②",
+      "text": "🔥ラストスパート🔥 {{ギフト}}ギフト{{目標数}}本＆1K貢献{{目標人数}}人目標✨ {{推しマ}}{{名前}}{{推しマ}} 最後まで応援お願いします💗",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m16",
+      "category": "battle",
+      "title": "全員参加①",
+      "text": "⚔️全員参加⚔️ 通常バトル🔥 みんなで一緒にお願いします✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m17",
+      "category": "battle",
+      "title": "全員参加②",
+      "text": "🔥全員参加⚔️通常バトル🔥 みんなで力を合わせよう✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m18",
+      "category": "battle",
+      "title": "初見・メンレベ①",
+      "text": "🔰初見さん＆メンレベ10以下の方🔰 ぜひ参加お願いします⚔️✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m19",
+      "category": "battle",
+      "title": "初見・メンレベ②",
+      "text": "✨初見さん＆メンレベ10以下✨ バトル参加よろしくお願いします⚔️ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m20",
+      "category": "rose",
+      "title": "ちょんちょん①",
+      "text": "{{ギフト}}1{{ギフト}}ちょんちょんお願いします✨ みんなで参加して盛り上げよう🔥",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m21",
+      "category": "rose",
+      "title": "ちょんちょん②",
+      "text": "{{ギフト}}1{{ギフト}}ちょんちょんタイム{{ギフト}} みんなの1{{ギフト}}お願いします✨",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m22",
+      "category": "rose",
+      "title": "ちょんちょん③",
+      "text": "🔥バトル中🔥 1{{ギフト}}ちょんちょんお願いします{{ギフト}}✨",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m23",
+      "category": "rose",
+      "title": "ちょんちょん④",
+      "text": "{{ギフト}}ちょんちょん{{ギフト}} 1個から参加お願いします✨ {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m24",
+      "category": "rose",
+      "title": "ちょんちょん⑤",
+      "text": "{{ギフト}}1{{ギフト}}でちょんちょん✨ みんなで一緒にバトル参加お願いします⚔️",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m25",
+      "category": "rose",
+      "title": "ちょんちょん⑥",
+      "text": "{{ギフト}}ちょんちょん参加お願いします{{ギフト}} みんなの1{{ギフト}}が力になります🔥",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m26",
+      "category": "last",
+      "title": "ラスト①｜皆で差し込み",
+      "text": "🚨ラストは皆で差し込み🚨 最後まで一緒に団結🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m27",
+      "category": "last",
+      "title": "ラスト②｜皆で差し込み",
+      "text": "🔥ラスト全員で差し込み🔥 タイミング合わせて一斉にお願いします⚔️",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m28",
+      "category": "last",
+      "title": "ラスト③｜差し込み🥊で5倍",
+      "text": "🥊差し込みで5倍🔥 ラストはタイミング合わせてお願いします✨",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m29",
+      "category": "last",
+      "title": "ラスト④｜差し込み🥊で5倍",
+      "text": "🚨差し込み🥊で5倍🚨 ラスト一斉にいこう🔥 {{推しマ}}{{名前}}{{推しマ}}",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m30",
+      "category": "last",
+      "title": "ラスト⑤｜団結",
+      "text": "🤝団結🤝 みんなで力を合わせてラスト差し込み🔥",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m31",
+      "category": "last",
+      "title": "ラスト⑥｜団結",
+      "text": "🔥ここから団結🔥 最後は皆で差し込み🥊 一緒に勝ちにいこう⚔️",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m32",
+      "category": "song",
+      "title": "キラコメ①",
+      "text": "✨.•*¨*•.¸¸♬ {{推しマ}} ♬•*¨*•.¸¸.✨",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m33",
+      "category": "song",
+      "title": "キラコメ②",
+      "text": "☆.｡.:*・ﾟ {{推しマ}} ☆.｡.:*・ﾟ",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m34",
+      "category": "song",
+      "title": "キラコメ③",
+      "text": "꒰ঌ ✨ {{推しマ}} ✨ ໒꒱",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m35",
+      "category": "song",
+      "title": "キラコメ④",
+      "text": "₊˚⊹♡ {{推しマ}} ♡⊹˚₊",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m36",
+      "category": "song",
+      "title": "キラコメ⑤",
+      "text": "⋆｡ﾟ✶°✨ {{推しマ}} ✨°✶｡ﾟ⋆",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m37",
+      "category": "song",
+      "title": "キラコメ⑥",
+      "text": "｡ﾟ•┈୨♡୧┈•ﾟ｡ {{推しマ}} ｡ﾟ•┈୨♡୧┈•ﾟ｡",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m38",
+      "category": "song",
+      "title": "キラコメ⑦",
+      "text": "✧･ﾟ: *✧･ﾟ:* {{推しマ}} *:･ﾟ✧*:･ﾟ✧",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m39",
+      "category": "song",
+      "title": "キラコメ⑧",
+      "text": "୨୧ ┈┈ {{推しマ}} ┈┈ ୨୧",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m40",
+      "category": "song",
+      "title": "キラコメ⑨",
+      "text": "⋆⸜ {{推しマ}} ⸝⋆ ✩.*˚",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m41",
+      "category": "song",
+      "title": "キラコメ⑩",
+      "text": "*ੈ✩‧₊˚ {{推しマ}} *ੈ✩‧₊˚",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m42",
+      "category": "song",
+      "title": "キラコメ⑪",
+      "text": "˚₊‧꒰ა ☆ ໒꒱ ‧₊˚ {{推しマ}} ˚₊‧꒰ა ☆ ໒꒱ ‧₊˚",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m43",
+      "category": "song",
+      "title": "キラコメ⑫",
+      "text": "♡₊˚ ✦ {{推しマ}} ✦ ˚₊♡",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m44",
+      "category": "song",
+      "title": "キラコメ⑬",
+      "text": "✩₊˚.⋆☾⋆⁺₊✧ {{推しマ}} ✧₊⁺⋆☾⋆.˚₊✩",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m45",
+      "category": "song",
+      "title": "キラコメ⑭",
+      "text": "˚ʚ♡ɞ˚ {{推しマ}} ˚ʚ♡ɞ˚",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m46",
+      "category": "song",
+      "title": "キラコメ⑮",
+      "text": "✧˖°⌖꙳✧˖° {{推しマ}} °˖✧꙳⌖°˖✧",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m47",
+      "category": "song",
+      "title": "キラコメ⑯",
+      "text": "♬.*ﾟ {{推しマ}} ♬.*ﾟ {{推しマ}} ♬.*ﾟ",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m48",
+      "category": "song",
+      "title": "キラコメ⑰",
+      "text": "•*¨*•.¸¸♬•*¨*•.¸¸♪ {{推しマ}} ♪¸¸.•*¨*•♬",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m49",
+      "category": "song",
+      "title": "キラコメ⑱",
+      "text": "✩°｡⋆⸜ 🎤 {{推しマ}} 🎶 ⸝⋆｡°✩",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m50",
+      "category": "song",
+      "title": "キラコメ⑲",
+      "text": "⋆ ˚｡⋆୨୧˚ {{推しマ}} ˚୨୧⋆｡˚ ⋆",
+      "visible": true,
+      "pinned": false
+    },
+    {
+      "id": "m51",
+      "category": "song",
+      "title": "キラコメ⑳",
+      "text": "✿.•¨•.¸¸.•¨•.¸¸♬ {{推しマ}} ♬¸¸.•¨•.¸¸.•¨•.✿",
+      "visible": true,
+      "pinned": false
+    }
+  ]
+}
