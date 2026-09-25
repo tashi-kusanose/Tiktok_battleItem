@@ -73,7 +73,18 @@ function stage(){
   if(!host&&open&&!own)body+=btn('できた！','answer','mint wide','data-value="true" data-server');
  }else if(s.kind==='bingo'){
   body=`<div class="bigresult number"><small>いま呼ばれた数字</small>${s.last??'—'}</div>`;
-  if(me?.card){const b=bingoLines(me.card,me.marks);body+=`<div class="bingohead">${'BINGO'.split('').map(c=>`<span>${c}</span>`).join('')}</div><div class="bingo">${me.card.map(n=>{const marked=n===0||me.marks.includes(n),called=s.drawn.includes(n);return `<button class="${marked?'marked':called?'called':''}" data-do="mark" data-value="${n}" data-server data-disabled="${!open||marked||!called}" ${!open||marked||!called?'disabled':''} aria-label="${n||'フリー'}${marked?' 開封済み':called?' タップして開く':''}">${n||'<small>FREE</small>'}</button>`}).join('')}</div><p class="caption center">${me.bingo?'ビンゴ確認済み！':b.bingo?'揃いました！ビンゴを申告しよう':b.reach?`リーチ ${b.reach}本！`:'黄色の数字をタップして開こう'}</p>${!me.bingo&&open?btn('ビンゴ！','claim','mint wide',`data-server ${!b.bingo?'disabled data-disabled="true"':''}`):''}`}
+  if(!host){
+    if(Array.isArray(me?.card)&&me.card.length===25){
+      const marks=Array.isArray(me.marks)?me.marks:[],bingoState=bingoLines(me.card,marks),hit=s.last!=null&&me.card.includes(s.last),opened=hit&&marks.includes(s.last);
+      if(s.last!=null)body+=`<div class="bingoalert ${hit?'hit':'miss'}" role="status" aria-live="polite"><strong>${hit?'🎯 当たり！':'今回はありません'}</strong><span>${hit?(opened?'この数字は開封済みです':'カードの '+s.last+' をタップして開こう'):'カードに '+s.last+' はありません'}</span></div>`;
+      else body+='<div class="bingoalert ready"><strong>あなたのビンゴカード</strong><span>数字が呼ばれたら、当たりを自動でお知らせします。</span></div>';
+      body+=`<div class="bingohead">${'BINGO'.split('').map(c=>`<span>${c}</span>`).join('')}</div><div class="bingo">${me.card.map(n=>{const marked=n===0||marks.includes(n),called=s.drawn.includes(n);return `<button class="${marked?'marked':called?'called':''}" data-do="mark" data-value="${n}" data-server data-disabled="${!open||marked||!called}" ${!open||marked||!called?'disabled':''} aria-label="${n||'フリー'}${marked?' 開封済み':called?' タップして開く':''}">${n||'<small>FREE</small>'}</button>`}).join('')}</div><p class="caption center">${me.bingo?'ビンゴ確認済み！':bingoState.bingo?'揃いました！ビンゴを申告しよう':bingoState.reach?`リーチ ${bingoState.reach}本！`:'黄色になった数字をタップして開こう'}</p>${!me.bingo&&open?btn('ビンゴ！','claim','mint wide',`data-server ${!bingoState.bingo?'disabled data-disabled="true"':''}`):''}`;
+    }else{
+      body+='<div class="bingoalert miss"><strong>ビンゴカードを取得できていません</strong><span>「再接続」を押してください。改善しない場合は一度退出して参加用リンクから入り直してください。</span></div>'+btn('再接続','retry','wide');
+    }
+  }else{
+    body+='<div class="bingoalert ready"><strong>参加者には個別の5×5カードが表示されます</strong><span>呼ばれた数字がカードにある場合は「🎯 当たり！」と表示され、該当マスが黄色になります。</span></div>';
+  }
   body+=`<div class="drawn" aria-label="抽選済みの数字">${s.drawn.map(n=>`<span>${n}</span>`).join('')}</div>`;
   body+=answerList(players.filter(p=>p.bingo),()=> 'BINGO！',()=>true);
  }else if(s.kind==='roulette'){
