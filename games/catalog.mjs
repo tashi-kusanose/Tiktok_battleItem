@@ -10,9 +10,9 @@ export const GAMES=[
  {id:'gacha',set:'kazz',icon:'◈',name:'ガチャガチャ',desc:'1人1回。何が出るかお楽しみ',tag:'抽選操作',prompt:'今日のあなたの称号は？',options:['伝説の常連','癒やしの天才','トークの相棒','今日の主役'],weights:[10,40,40,10]},
  {id:'lottery',set:'kazz',icon:'☆',name:'参加者抽選',desc:'参加者から順に、重複なしで抽選',tag:'抽選対象',prompt:'今日のラッキーリスナーは？'},
  {id:'quiz',set:'kazz',icon:'?',name:'4択クイズ',desc:'回答を締め切って正解を発表',tag:'回答',prompt:'1年のうち、30日で終わる月はいくつ？',options:['3つ','4つ','5つ','6つ'],correct:1},
- {id:'rps',set:'kazz',icon:'✌',name:'みんなでじゃんけん',desc:'手を選んで、共通の相手と勝負',tag:'対戦',prompt:'グー・チョキ・パーを選ぼう！相手の手は締切後に決定'},
- {id:'dice',set:'kazz',icon:'⚄',name:'サイコロ勝負',desc:'1人1回。大きな目を出した人が勝ち',tag:'抽選操作',prompt:'サイコロを振ってみよう！一番大きな目の人が優勝'},
- {id:'number',set:'kazz',icon:'#',name:'数字ぴったり予想',desc:'1〜100で予想。一番近い人が勝ち',tag:'予想',prompt:'1〜100から予想！正解の数字は締切後に抽選'}
+ {id:'slot',set:'kazz',icon:'▥',name:'スロット',desc:'1人1回。3つ揃えば大当たり',tag:'抽選操作',prompt:'スロットで運試し！3つ揃えば大当たり'},
+ {id:'cards',set:'kazz',icon:'▣',name:'カードめくり',desc:'共有の6枚から、1人1枚を選ぼう',tag:'選択操作',prompt:'好きな番号を選ぼう！1人1枚・同じカードは選べません',options:['歌を1曲','質問タイム','スクショタイム','ものまね','次のお題を決める','大当たり']},
+ {id:'treasure',set:'kazz',icon:'◇',name:'宝箱',desc:'6つの宝箱、どこに当たりがある？',tag:'選択操作',prompt:'宝箱を選んで開けよう！1人1つ・開封済みは選べません',options:['大当たり','セーフ','セーフ','セーフ','セーフ','セーフ']}
 ];
 export const getGame=id=>GAMES.find(g=>g.id===id);
 export const pick=items=>items[Math.floor(Math.random()*items.length)];

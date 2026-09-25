@@ -18,7 +18,7 @@ Deno.serve(async req => {
    const raw=await req.text();
    if(raw.length>18000) return reply({error:'入力が長すぎます'},413);
    const data=JSON.parse(raw);
-   const allowed=['create','join','snapshot','start','answer','mark','claim','pull','draw','close','lock','kick','end'];
+   const allowed=['create','join','snapshot','start','answer','mark','claim','pull','draw','close','lock','kick','end','pick'];
    if(!allowed.includes(data.action) || typeof data.code!=='string' && data.action!=='create') return reply({error:'操作が無効です'},400);
    // x-forwarded-for is set by the platform ingress. Store only a daily salted digest.
    const ip=(req.headers.get('x-forwarded-for')||'unknown').split(',')[0].trim();
