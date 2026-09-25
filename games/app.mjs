@@ -1,4 +1,4 @@
-import {GAMES,getGame,defaults,pick,HANDS,winsRps,bingoLines} from './catalog.mjs';
+import {GAMES,getGame,defaults,pick,HANDS,winsRps,bingoLines} from './catalog.mjs?v=3';
 const API='https://esfgrykcvdctnvdqipbj.supabase.co/functions/v1/kazz-games';
 const client=window.supabase?.createClient('https://esfgrykcvdctnvdqipbj.supabase.co','sb_publishable_Rwb3qaRXdWZoo05LrbFaDg_29tMI7uI',{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const $=s=>document.querySelector(s), app=$('#app'), modal=$('#modal');
