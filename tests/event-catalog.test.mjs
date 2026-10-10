@@ -4,6 +4,12 @@ import { loadCatalog, validateCatalog } from '../events/catalog.mjs';
 
 const masters = { slug: 'masters-october-2026', title: 'MASTERS', page_path: 'masters/', sort_order: 10 };
 const king = { slug: 'king-of-stage-2026', title: 'THE KING OF STAGE', page_path: 'king-of-stage/', sort_order: 30 };
+const music = { slug: 'music-stage-2026', title: 'MUSIC STAGE', page_path: 'music-stage/', sort_order: 40 };
+
+test('Music Stage is an allowed local destination alongside existing guides', () => {
+  assert.deepEqual(validateCatalog([music, king, masters]).map(row => row.page_path), ['masters/', 'king-of-stage/', 'music-stage/']);
+  assert.throws(() => validateCatalog([{...music, page_path:'../music-stage/'}]));
+});
 
 test('published events are sorted without changing the response', () => {
   const rows = [king, masters];
