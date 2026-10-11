@@ -11,3 +11,54 @@
 @media(max-height:550px) and (max-width:800px){main{overflow:auto}.view{height:auto;min-height:100%}.pane{overflow:visible;flex:none}.hero{min-height:230px}.hero>img{height:180px;min-height:180px}.calc-layout{min-height:520px}.calc-editor{min-height:320px}.explorer{min-height:400px}}
 #calc-total[data-long=true]{font-size:clamp(18px,2.2vw,29px)}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Keep calculator labels above their controls at every viewport width. */
+#calculator .calc-conditions {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.65fr);
+  align-items: start;
+  gap: 12px;
+  flex: none;
+}
+#calculator .calc-conditions label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: normal;
+}
+#calculator .condition-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 3px;
+}
+#calculator .condition-label small { font-size: 10px; }
+#calculator .calc-conditions select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  min-height: 38px;
+  padding: 8px 6px 8px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+@media (max-width: 550px) {
+  #calculator .calc-conditions { gap: 10px; }
+  #calculator .calc-conditions label { font-size: 10px; }
+  #calculator .condition-label small { font-size: 9px; }
+  #calculator .calc-conditions select {
+    min-height: 36px;
+    padding-left: 8px;
+    font-size: 12px;
+  }
+}
+@media (max-width: 370px) {
+  #calculator .calc-conditions { gap: 8px; }
+  #calculator .calc-conditions select { font-size: 11px; }
+}
