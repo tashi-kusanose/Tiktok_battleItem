@@ -12,16 +12,6 @@ const gifts=[
 ];
 const pageMission={id:'page',name:'イベントページを開く',points:50000,target:1,unit:'回',condition:'イベントページを1回開く',description:'TikTokアプリ内の大会ページが対象です。このガイドを開いても達成にはなりません。'};
 const dailyMissions=gifts.slice(0,4),periodMissions=[pageMission,...gifts.slice(4)];
-const sources=[
- {file:'01-1000043030.png',title:'01 · 第6回 注目ポイント',width:723,height:1536},
- {file:'02-1000043032.png',title:'02 · イベント概要',width:939,height:1536},
- {file:'03-1000043034.png',title:'03 · 限定ギフト一覧',width:963,height:1536},
- {file:'04-1000043047.png',title:'04 · 限定ギフト・ランキング紹介',width:673,height:1536},
- {file:'05-1000043039.png',title:'05 · ギフトランキングの計算ルール',width:909,height:1536},
- {file:'06-1000043041.png',title:'06 · ボーナスタイム・各ミッション',width:581,height:1536},
- {file:'07-1000043043.png',title:'07 · ギフトランキング特典',width:831,height:1536},
- {file:'08-1000043045.png',title:'08 · デイリーランキング・抽選特典',width:599,height:1536}
-];
 const cropGift=(g,label=false)=>`<svg viewBox="${g.crop.join(' ')}" ${label?`role="img" aria-label="${g.name}"`:'aria-hidden="true"'}><image href="assets/03-1000043034.png" width="963" height="1536"/></svg>`;
 document.querySelector('#gift-grid').innerHTML=gifts.map((g,i)=>`<article class="gift-card ${g.isNew?'new':''}"><div class="gift-topline"><span class="gift-number">GIFT ${String(i+1).padStart(2,'0')}</span>${g.isNew?'<span class="new-badge">NEW</span>':g.id==='stars'?'<span class="new-badge">SPECIAL</span>':''}</div><div class="gift-art">${cropGift(g,true)}</div><div class="gift-info"><h2>${g.name}</h2><div class="gift-price"><b>${format(g.coins)}</b><span>コイン</span></div><div class="gift-mission"><span>${g.type}ミッション</span><b>${g.condition}</b></div><button data-gift-mission="${g.id}">達成ボーナス +${format(g.points)}pt</button></div></article>`).join('');
 function missionAmounts(g,rounds=1){
@@ -135,20 +125,10 @@ function applyCalc(data){
 document.querySelector('#load-example').addEventListener('click',()=>applyCalc({limited:10000,other:2000,likes:60000,daily:[1,1,0,0],period:[true,false,false],rank:0}));
 updateCalc();
 
-const sourceDialog=document.querySelector('#source-dialog');let sourceOpener;
-document.querySelector('#source-select').innerHTML=sources.map((s,i)=>`<option value="${i+1}">${s.title}</option>`).join('');
-function setSource(n){const s=sources[n-1]||sources[0],img=document.querySelector('#source-image');img.src=`assets/${s.file}`;img.alt=s.title;img.width=s.width;img.height=s.height;document.querySelector('#source-select').value=String(n);}
-function openSource(n=1){setSource(n);sourceOpener=document.activeElement;sourceDialog.showModal();document.body.classList.add('dialog-open');sourceDialog.scrollTop=0;}
-document.querySelectorAll('[data-source]').forEach(b=>b.addEventListener('click',()=>openSource(Number(b.dataset.source))));
-document.querySelector('#open-sources').addEventListener('click',()=>openSource());document.querySelector('#footer-sources')?.addEventListener('click',()=>openSource());document.querySelector('#close-source').addEventListener('click',()=>sourceDialog.close());
-sourceDialog.addEventListener('close',()=>{document.body.classList.remove('dialog-open');sourceOpener?.focus();});
-sourceDialog.addEventListener('click',e=>{if(e.target===sourceDialog){const r=sourceDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)sourceDialog.close();}});
-document.querySelector('#source-select').addEventListener('change',e=>{setSource(Number(e.target.value));sourceDialog.scrollTop=0;});
-
 const detailDialog=document.querySelector('#detail-dialog');let detailOpener;
 const detailsContent={
- assumption:{title:'ポイントの計算前提',html:'<p>必要コイン数は「ギフト1個のコイン数 × 達成に必要な個数 × 達成回数」で算出します。クラウンは、20名が各1個を送った場合の最低額です。</p><p>原本で確定しているのは「イベント限定ギフトは受取1ダイヤ＝3pt」です。コインからダイヤへの換算式は資料にありません。</p><p>比較用のイベントptとトータルptは、<strong>1コイン＝1ダイヤと仮定</strong>した参考値です。必要コイン数と達成ボーナスは原本に基づく数値です。ボーナスタイムの追加分、いいね、順位ボーナスは含みません。</p><p>同じギフトの獲得ポイントを重複加算しないよう、実績の試算では「ポイント」画面に実際の受取ダイヤ数と達成回数を別々に入力してください。</p>'},
- about:{title:'このガイドについて',html:'<p>第6回 MASTERS CHAMPIONSHIPの大会案内8枚をもとに、KazzCompanyが作成した非公式ガイドです。掲載資料：2026年10月7日。</p><p>最新の条件・獲得実績はTikTokアプリ内で確認してください。ボーナスタイムの追加倍率、視聴者応援ランキングの詳細、Vault招待状の条件は資料に記載されていません。</p><p>原本画像は、画面右上の資料アイコンから確認できます。</p>'}
+ assumption:{title:'ポイントの計算前提',html:'<p>必要コイン数は「ギフト1個のコイン数 × 達成に必要な個数 × 達成回数」で算出します。クラウンは、20名が各1個を送った場合の最低額です。</p><p>大会案内で確定しているのは「イベント限定ギフトは受取1ダイヤ＝3pt」です。コインからダイヤへの換算式は資料にありません。</p><p>比較用のイベントptとトータルptは、<strong>1コイン＝1ダイヤと仮定</strong>した参考値です。必要コイン数と達成ボーナスは大会案内に基づく数値です。ボーナスタイムの追加分、いいね、順位ボーナスは含みません。</p><p>同じギフトの獲得ポイントを重複加算しないよう、実績の試算では「ポイント」画面に実際の受取ダイヤ数と達成回数を別々に入力してください。</p>'},
+ about:{title:'このガイドについて',html:'<p>第6回 MASTERS CHAMPIONSHIPの大会案内をもとに作成した非公式ガイドです。掲載資料：2026年10月7日。</p><p>最新の条件・獲得実績はTikTokアプリ内で確認してください。ボーナスタイムの追加倍率、視聴者応援ランキングの詳細、Vault招待状の条件は資料に記載されていません。</p><p>デイリーミッション全体表には「30,000〜510,000pt / 日」とありますが、個別表のウィッシュは「26,000pt」です。本ページの試算は個別表の26,000ptを採用しています。</p>'}
 };
 function openDetail(title,html){detailOpener=document.activeElement;document.querySelector('#detail-title').textContent=title;document.querySelector('#detail-content').innerHTML=html;detailDialog.showModal();document.body.classList.add('dialog-open');detailDialog.scrollTop=0;}
 document.querySelectorAll('[data-detail]').forEach(b=>b.addEventListener('click',()=>{const item=detailsContent[b.dataset.detail];openDetail(item.title,item.html);}));
