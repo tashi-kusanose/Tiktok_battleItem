@@ -1228,6 +1228,24 @@
       background: rgba(39,245,255,.11); color: #e5ffff; font-size: 13px;
     }
     .transfer-status { margin-top: 8px; color: rgba(255,255,255,.68); font-size: 11px; font-weight: 800; line-height: 1.5; text-align: center; }
+
+    /* Acquisition date/time editor */
+    .remaining-acquired { display:block; margin-top:5px; color:rgba(255,255,255,.72); font-size:11px; line-height:1.5; }
+    .acquisition-edit { grid-column:1 / -1; min-height:40px; padding:8px 12px; border:1px solid rgba(39,245,255,.35); border-radius:10px; background:rgba(39,245,255,.1); color:#dcfcff; font-size:13px; }
+    .acquisition-dialog { width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 32px); box-sizing:border-box; overflow:auto; border:1px solid rgba(255,255,255,.25); border-radius:22px; padding:20px; color:#fff; background:#180e28; box-shadow:0 24px 80px rgba(0,0,0,.6); }
+    .acquisition-dialog::backdrop { background:rgba(3,1,12,.72); backdrop-filter:blur(5px); }
+    .acquisition-dialog h2 { margin:0 0 8px; font-size:21px; }
+    .acquisition-subject { margin:0 0 18px; color:#cfc6df; font-size:13px; overflow-wrap:anywhere; }
+    .acquisition-fields { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:12px; }
+    .acquisition-fields label { display:grid; gap:7px; min-width:0; font-size:13px; font-weight:700; }
+    .acquisition-fields input { width:100%; min-width:0; box-sizing:border-box; min-height:46px; padding:8px; border:1px solid #706183; border-radius:10px; color:#fff; background:#291d3b; color-scheme:dark; font:inherit; font-size:16px; }
+    .acquisition-note { margin:14px 0 0; color:#cfc6df; font-size:12px; line-height:1.7; }
+    .acquisition-preview { min-height:38px; margin:8px 0; color:#9af5f7; font-size:13px; line-height:1.6; }
+    .acquisition-error { margin:8px 0; color:#ffb5b5; font-size:13px; line-height:1.6; }
+    .acquisition-actions { display:flex; gap:10px; margin-top:18px; }
+    .acquisition-actions button { flex:1; min-height:46px; padding:10px; border-radius:12px; font-size:14px; }
+    .acquisition-actions button[type="submit"] { background:#9af5f7; color:#161125; }
+    .acquisition-dialog :focus-visible { outline:2px solid #9af5f7; outline-offset:3px; }
   </style>
 </head>
 <body>
@@ -1276,6 +1294,25 @@
     </section>
   </div>
 
+
+  <dialog id="acquisitionDialog" class="acquisition-dialog" aria-labelledby="acquisitionTitle" aria-describedby="acquisitionNote">
+    <form id="acquisitionForm">
+      <h2 id="acquisitionTitle" tabindex="-1">取得日時を修正</h2>
+      <p id="acquisitionSubject" class="acquisition-subject"></p>
+      <div class="acquisition-fields">
+        <label>取得日<input id="acquisitionDate" type="date" required /></label>
+        <label>取得時間<input id="acquisitionTime" type="time" step="60" required /></label>
+      </div>
+      <p id="acquisitionNote" class="acquisition-note">有効期限は取得日時から5日後です。日時は端末のタイムゾーンで表示します。</p>
+      <p id="acquisitionPreview" class="acquisition-preview" aria-live="polite"></p>
+      <p id="acquisitionError" class="acquisition-error" role="alert"></p>
+      <div class="acquisition-actions">
+        <button id="acquisitionCancel" type="button">キャンセル</button>
+        <button id="acquisitionSave" type="submit">保存する</button>
+      </div>
+    </form>
+  </dialog>
+
   <div class="remaining-modal" id="remainingModal" hidden>
     <div class="remaining-backdrop" data-action="close-remaining"></div>
     <section class="remaining-sheet" role="dialog" aria-modal="true" aria-label="残り時間一覧">
@@ -1300,6 +1337,7 @@
         <li><strong>表示順：</strong>🥊グローブを持っている人は、一番短い残り時間が近い順に上から表示します。グローブを持っていない人はその下に表示します。</li>
         <li><strong>トップ画面：</strong>名前の下に各アイテムの所持数と、そのアイテムで一番短い残り時間を表示します。</li>
         <li><strong>アイテム編集：</strong>名前またはトップ画面のアイテムをタップすると、中央ポップアップで＋/−できます。</li>
+        <li><strong>取得日時の修正：</strong>名前 → アイテム →「取得日時を修正」で取得日・取得時間を変更し、保存します。有効期限は取得から5日後に更新されます。日時未設定のアイテムにも設定できます。</li>
         <li><strong>残り時間確認：</strong>編集ポップアップ内のアイテム部分をタップすると、同じアイテムを複数持っている場合も1個ずつの残り時間を確認できます。</li>
         <li><strong>「枠内」チェック：</strong>今この配信枠にいる人の名前横にある「枠内」にチェックします。チェックはこの端末だけの一時情報で、再読み込みすると解除されます。</li>
         <li><strong>🥊在席者をコピー：</strong>「枠内」にチェックした人のうち🥊グローブを持っている人だけを抽出し、残り時間が短い順にTikTok LIVEコメント用の短文としてコピーします。</li>
@@ -1733,6 +1771,154 @@
       }
     }
 
+
+    // ACQUISITION_EDITOR_START
+    const acquisitionUi = Object.fromEntries([
+      "Dialog", "Form", "Title", "Subject", "Date", "Time", "Preview", "Error", "Cancel", "Save"
+    ].map(key => [key.toLowerCase(), document.getElementById("acquisition" + key)]));
+    let acquisitionDraft = null;
+    let acquisitionSaving = false;
+
+    function canEditAcquisition() { return true; }
+
+    function acquisitionFields(timestamp) {
+      const date = new Date(timestamp);
+      const pad = value => String(value).padStart(2, "0");
+      return { date: `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`,
+        time: `${pad(date.getHours())}:${pad(date.getMinutes())}` };
+    }
+
+    function formatAcquisitionDate(timestamp) {
+      const fields = acquisitionFields(timestamp);
+      return `${fields.date.replaceAll("-", "/")} ${fields.time}`;
+    }
+
+    function parseAcquisitionDate(date, time) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return NaN;
+      const timestamp = new Date(`${date}T${time}:00`).getTime();
+      if (!Number.isFinite(timestamp)) return NaN;
+      const fields = acquisitionFields(timestamp);
+      return fields.date === date && fields.time === time ? timestamp : NaN;
+    }
+
+    function acquisitionSignature(person, itemKey) {
+      return JSON.stringify([Number(person.counts?.[itemKey] || 0), normalizeExpirations(person.expirations)[itemKey]]);
+    }
+
+    function buildAcquisitionState(people, draft, acquiredAt, now = Date.now()) {
+      if (!Number.isFinite(acquiredAt) || acquiredAt <= 0 || acquiredAt > now) throw new Error("現在までの正しい取得日時を入力してください。");
+      const next = JSON.parse(JSON.stringify(people));
+      const person = next.find(entry => entry.id === draft.personId);
+      if (!person || acquisitionSignature(person, draft.itemKey) !== draft.signature) {
+        throw new Error("このアイテムの情報が変わりました。閉じて一覧から選び直してください。");
+      }
+      const list = normalizeExpirations(person.expirations)[draft.itemKey];
+      const count = Number(person.counts[draft.itemKey]);
+      if (draft.expiresAt === null) {
+        if (count <= list.length) throw new Error("日時未設定のアイテムがありません。一覧から選び直してください。");
+      } else {
+        const index = list.indexOf(draft.expiresAt);
+        if (index < 0) throw new Error("対象のアイテムが見つかりません。一覧から選び直してください。");
+        list.splice(index, 1);
+      }
+      const expiresAt = acquiredAt + EXPIRATION_MS;
+      if (expiresAt <= now) person.counts[draft.itemKey] = Math.max(0, count - 1);
+      else list.push(expiresAt);
+      person.expirations = { ...person.expirations, [draft.itemKey]: list.sort((a,b) => a-b) };
+      return next.filter(entry => entry.id !== person.id || !isZeroPerson(entry));
+    }
+
+    function openAcquisitionEditor(index) {
+      if (!canEditAcquisition() || acquisitionSaving) return;
+      const person = getPersonById(activePersonId);
+      const item = ITEMS.find(entry => entry.key === activeRemainingItemKey);
+      if (!person || !item || !Number.isInteger(index) || index < 0 || index >= Number(person.counts[item.key])) return;
+      const expiresAt = getActiveExpirations(person, item.key).slice(0, Number(person.counts[item.key]))[index] ?? null;
+      const fields = expiresAt === null ? { date:"", time:"" } : acquisitionFields(expiresAt - EXPIRATION_MS);
+      acquisitionDraft = { personId:person.id, itemKey:item.key, expiresAt,
+        signature:acquisitionSignature(person, item.key), fields };
+      acquisitionUi.subject.textContent = `${person.name || "名前未入力"} / ${item.name} / ${index+1}個目`;
+      acquisitionUi.date.value = fields.date;
+      acquisitionUi.date.max = acquisitionFields(Date.now()).date;
+      acquisitionUi.time.value = fields.time;
+      acquisitionUi.error.textContent = "";
+      updateAcquisitionPreview();
+      acquisitionUi.dialog.showModal();
+      acquisitionUi.title.focus();
+    }
+
+    function updateAcquisitionPreview() {
+      const timestamp = parseAcquisitionDate(acquisitionUi.date.value, acquisitionUi.time.value);
+      const now = Date.now();
+      acquisitionUi.preview.textContent = !Number.isFinite(timestamp) ? "取得日と取得時間を入力してください。"
+        : timestamp > now ? "未来の取得日時は指定できません。"
+        : timestamp + EXPIRATION_MS <= now ? "この日時では期限切れのため、保存すると所持数が1個減ります。"
+        : `有効期限：${formatAcquisitionDate(timestamp + EXPIRATION_MS)}`;
+    }
+
+    function closeAcquisitionEditor() {
+      if (acquisitionSaving) return;
+      acquisitionUi.dialog.close();
+    }
+
+    async function saveAcquisitionEditor(event) {
+      event.preventDefault();
+      if (!acquisitionDraft || acquisitionSaving || !canEditAcquisition()) return;
+      if (!acquisitionUi.form.reportValidity()) return;
+      const draft = acquisitionDraft;
+      const acquiredAt = parseAcquisitionDate(acquisitionUi.date.value, acquisitionUi.time.value);
+      acquisitionUi.error.textContent = "";
+      if (!Number.isFinite(acquiredAt) || acquiredAt <= 0 || acquiredAt > Date.now()) {
+        acquisitionUi.error.textContent = "現在までの正しい取得日時を入力してください。";
+        return;
+      }
+      // Opening and saving without edits must not discard stored seconds/milliseconds.
+      if (draft.expiresAt !== null && acquisitionUi.date.value === draft.fields.date && acquisitionUi.time.value === draft.fields.time) {
+        closeAcquisitionEditor();
+        return;
+      }
+      if (acquiredAt + EXPIRATION_MS <= Date.now() && !confirm("この取得日時では期限切れのため、アイテムが1個減ります。保存しますか？")) return;
+      acquisitionSaving = true;
+      acquisitionUi.save.disabled = true;
+      acquisitionUi.cancel.disabled = true;
+      acquisitionUi.save.textContent = "保存中…";
+      try {
+        // Read the current local data too, so edits in another tab are detected.
+        const latest = normalizePeople(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+        if (latest) state = latest;
+        const next = buildAcquisitionState(state, draft, acquiredAt);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        state = next;
+        acquisitionUi.dialog.close();
+        if (activePersonId && !getPersonById(activePersonId)) closeModal({ removeZeroActive:false, renderAfterClose:false });
+        renderPeople();
+        if (!els.modal.hidden) renderModal();
+        if (!els.remainingModal.hidden) renderRemainingModal();
+      } catch (error) {
+        acquisitionUi.error.textContent = error.message || "保存できませんでした。通信状態を確認して再度お試しください。";
+      } finally {
+        acquisitionSaving = false;
+        acquisitionUi.save.disabled = false;
+        acquisitionUi.cancel.disabled = false;
+        acquisitionUi.save.textContent = "保存する";
+      }
+    }
+
+    els.remainingList.addEventListener("click", event => {
+      const button = event.target.closest("[data-edit-acquisition]");
+      if (button && els.remainingList.contains(button)) openAcquisitionEditor(Number(button.dataset.editAcquisition));
+    });
+    acquisitionUi.form.addEventListener("submit", saveAcquisitionEditor);
+    acquisitionUi.date.addEventListener("input", updateAcquisitionPreview);
+    acquisitionUi.time.addEventListener("input", updateAcquisitionPreview);
+    acquisitionUi.cancel.addEventListener("click", closeAcquisitionEditor);
+    acquisitionUi.dialog.addEventListener("cancel", event => { if (acquisitionSaving) event.preventDefault(); });
+    acquisitionUi.dialog.addEventListener("close", () => {
+      acquisitionDraft = null;
+      if (!els.remainingModal.hidden) els.remainingClose.focus();
+    });
+    // ACQUISITION_EDITOR_END
+
     function renderRemainingModal() {
       const person = getPersonById(activePersonId);
       const item = ITEMS.find(entry => entry.key === activeRemainingItemKey);
@@ -1750,14 +1936,15 @@
         <div class="remaining-preview-icon ${iconClass(item)}" aria-hidden="true">${iconContent(item)}</div>
         <div class="remaining-preview-main">
           <div class="remaining-preview-count">所持数：${count}個</div>
-          <div class="remaining-preview-note">＋で増やしたアイテムごとの残り時間です。一番上が一番古いアイテムです。</div>
+          <div class="remaining-preview-note">取得日時と残り時間です。一番上が一番古いアイテムです。${canEditAcquisition() ? "取得日時は1個ずつ修正できます。" : ""}</div>
         </div>
       `;
 
       const rows = activeExpirations.map((expiresAt, index) => `
         <div class="remaining-row">
           <span class="remaining-index">${index + 1}個目</span>
-          <span class="remaining-time">${formatRemainingTime(expiresAt)}<br><small>${formatExpireDateTime(expiresAt)}</small></span>
+          <span class="remaining-time">${formatRemainingTime(expiresAt)}<br><small>${formatExpireDateTime(expiresAt)}</small><span class="remaining-acquired">取得：${formatAcquisitionDate(expiresAt - EXPIRATION_MS)}</span></span>
+          ${canEditAcquisition() ? `<button class="acquisition-edit" type="button" data-edit-acquisition="${index}">取得日時を修正</button>` : ""}
         </div>
       `);
 
@@ -1766,6 +1953,7 @@
           <div class="remaining-row">
             <span class="remaining-index">${activeExpirations.length + index + 1}個目</span>
             <span class="remaining-time">期限データなし<br><small>改修前の個数など</small></span>
+            ${canEditAcquisition() ? `<button class="acquisition-edit" type="button" data-edit-acquisition="${activeExpirations.length + index}">取得日時を設定</button>` : ""}
           </div>
         `);
       }
@@ -2497,6 +2685,7 @@
 
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
+      if (acquisitionUi.dialog.open) return;
       if (!els.shareModal.hidden) {
         closeShareModal();
         return;
@@ -2536,6 +2725,7 @@
     renderPeople();
 
     setInterval(() => {
+      if (acquisitionSaving) return;
       processExpiredIncrements();
       renderPeople();
       if (!els.modal.hidden) renderModal();
