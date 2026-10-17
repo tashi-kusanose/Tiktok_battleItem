@@ -15,8 +15,9 @@ function extract(name) {
   return source.slice(start, source.indexOf('\n    }', start) + 6);
 }
 const ctx = vm.createContext({});
-vm.runInContext(`const EXPIRATION_MS = 432000000; const ITEMS = ['glove','secretGlove','timer'].map(key=>({key}));\n` +
-  ['createEmptyExpirations','normalizeExpirations','getTotalCount','isZeroPerson','acquisitionFields','parseAcquisitionDate','acquisitionSignature','buildAcquisitionState'].map(extract).join('\n'), ctx);
+const itemDefinitions = source.slice(source.indexOf('    const ITEM_ICONS ='), source.indexOf('    const els ='));
+vm.runInContext(`const EXPIRATION_MS = 432000000;\n${itemDefinitions}\n` +
+  ['createEmptyCounts','createEmptyExpirations','normalizeExpirations','normalizePeople','addItemCount','subtractItemCount','getTotalCount','isZeroPerson','acquisitionFields','parseAcquisitionDate','acquisitionSignature','buildAcquisitionState'].map(extract).join('\n'), ctx);
 const now = Date.parse('2026-10-17T00:30:00+09:00');
 const day = 86400000;
 const expiry = now + 2 * day;
@@ -78,4 +79,35 @@ test('expiry can cross year boundary with an exact 120-hour lifetime', () => {
   const n=Date.parse('2026-12-31T23:59:00+09:00'),p=person();
   const r=ctx.buildAcquisitionState([p],draft(p),n,n)[0];
   assert.ok(r.expirations.glove.includes(n+5*day));
+});
+
+test('old inventory gains Song Rush defaults without losing existing counts or timestamps', () => {
+  const p=person(),before=plain(p),r=ctx.normalizePeople([p])[0];
+  assert.equal(r.counts.songRush,0);
+  assert.deepEqual(plain(r.expirations.songRush),[]);
+  for(const key of Object.keys(p.counts)) assert.equal(r.counts[key],p.counts[key]);
+  for(const key of Object.keys(p.expirations)) assert.deepEqual(plain(r.expirations[key]),p.expirations[key]);
+  assert.deepEqual(p,before);
+});
+test('Song Rush survives adding, saving, reloading and subtracting without altering other items', () => {
+  const p=ctx.normalizePeople([person()])[0],before=plain(p);
+  ctx.addItemCount(p,'songRush');ctx.addItemCount(p,'songRush');
+  const restored=ctx.normalizePeople(plain([p]))[0];
+  assert.equal(restored.counts.songRush,2);
+  assert.equal(restored.expirations.songRush.length,2);
+  ctx.subtractItemCount(restored,'songRush');
+  assert.equal(restored.counts.songRush,1);
+  assert.equal(restored.expirations.songRush.length,1);
+  assert.deepEqual(plain(restored.expirations.glove),before.expirations.glove);
+  assert.equal(restored.counts.glove,before.counts.glove);
+});
+test('Song Rush acquisition edits preserve counts and keep owners who have no other items', () => {
+  const p=ctx.normalizePeople([{id:'song',name:'ソングのみ',counts:{songRush:2},expirations:{songRush:[expiry,expiry+day]}}])[0];
+  const edited=ctx.buildAcquisitionState([p],draft(p,expiry,'songRush'),now-day,now)[0];
+  assert.equal(edited.counts.songRush,2);
+  assert.deepEqual(plain(edited.expirations.songRush),[expiry+day,now+4*day]);
+  const expired=ctx.buildAcquisitionState([edited],draft(edited,expiry+day,'songRush'),now-6*day,now)[0];
+  assert.equal(expired.counts.songRush,1);
+  assert.deepEqual(plain(expired.expirations.songRush),[now+4*day]);
+  assert.deepEqual(plain(ctx.buildAcquisitionState([expired],draft(expired,now+4*day,'songRush'),now-6*day,now)),[]);
 });
