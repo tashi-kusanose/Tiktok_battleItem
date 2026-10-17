@@ -1235,23 +1235,22 @@
     }
     .transfer-status { margin-top: 8px; color: rgba(255,255,255,.68); font-size: 11px; font-weight: 800; line-height: 1.5; text-align: center; }
 
-    /* Acquisition date/time editor */
-    .remaining-acquired { display:block; margin-top:5px; color:rgba(255,255,255,.72); font-size:11px; line-height:1.5; }
-    .acquisition-edit { grid-column:1 / -1; min-height:40px; padding:8px 12px; border:1px solid rgba(39,245,255,.35); border-radius:10px; background:rgba(39,245,255,.1); color:#dcfcff; font-size:13px; }
-    .acquisition-dialog { width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 32px); box-sizing:border-box; overflow:auto; border:1px solid rgba(255,255,255,.25); border-radius:22px; padding:20px; color:#fff; background:#180e28; box-shadow:0 24px 80px rgba(0,0,0,.6); }
-    .acquisition-dialog::backdrop { background:rgba(3,1,12,.72); backdrop-filter:blur(5px); }
-    .acquisition-dialog h2 { margin:0 0 8px; font-size:21px; }
-    .acquisition-subject { margin:0 0 18px; color:#cfc6df; font-size:13px; overflow-wrap:anywhere; }
-    .acquisition-fields { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:12px; }
-    .acquisition-fields label { display:grid; gap:7px; min-width:0; font-size:13px; font-weight:700; }
-    .acquisition-fields input { width:100%; min-width:0; box-sizing:border-box; min-height:46px; padding:8px; border:1px solid #706183; border-radius:10px; color:#fff; background:#291d3b; color-scheme:dark; font:inherit; font-size:16px; }
-    .acquisition-note { margin:14px 0 0; color:#cfc6df; font-size:12px; line-height:1.7; }
-    .acquisition-preview { min-height:38px; margin:8px 0; color:#9af5f7; font-size:13px; line-height:1.6; }
-    .acquisition-error { margin:8px 0; color:#ffb5b5; font-size:13px; line-height:1.6; }
-    .acquisition-actions { display:flex; gap:10px; margin-top:18px; }
-    .acquisition-actions button { flex:1; min-height:46px; padding:10px; border-radius:12px; font-size:14px; }
-    .acquisition-actions button[type="submit"] { background:#9af5f7; color:#161125; }
-    .acquisition-dialog :focus-visible { outline:2px solid #9af5f7; outline-offset:3px; }
+    /* Remaining duration editor */
+    .duration-edit { grid-column:1 / -1; min-height:40px; padding:8px 12px; border:1px solid rgba(39,245,255,.35); border-radius:10px; background:rgba(39,245,255,.1); color:#dcfcff; font-size:13px; }
+    .duration-dialog { width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 32px); box-sizing:border-box; overflow:auto; border:1px solid rgba(255,255,255,.25); border-radius:22px; padding:20px; color:#fff; background:#180e28; box-shadow:0 24px 80px rgba(0,0,0,.6); }
+    .duration-dialog::backdrop { background:rgba(3,1,12,.72); backdrop-filter:blur(5px); }
+    .duration-dialog h2 { margin:0 0 8px; font-size:21px; }
+    .duration-subject { margin:0 0 18px; color:#cfc6df; font-size:13px; overflow-wrap:anywhere; }
+    .duration-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .duration-fields label { display:grid; gap:7px; min-width:0; font-size:13px; font-weight:700; }
+    .duration-fields input { width:100%; min-width:0; box-sizing:border-box; min-height:46px; padding:8px; border:1px solid #706183; border-radius:10px; color:#fff; background:#291d3b; color-scheme:dark; font:inherit; font-size:16px; }
+    .duration-note { margin:14px 0 0; color:#cfc6df; font-size:12px; line-height:1.7; }
+    .duration-preview { min-height:38px; margin:8px 0; color:#9af5f7; font-size:13px; line-height:1.6; }
+    .duration-error { margin:8px 0; color:#ffb5b5; font-size:13px; line-height:1.6; }
+    .duration-actions { display:flex; gap:10px; margin-top:18px; }
+    .duration-actions button { flex:1; min-height:46px; padding:10px; border-radius:12px; font-size:14px; }
+    .duration-actions button[type="submit"] { background:#9af5f7; color:#161125; }
+    .duration-dialog :focus-visible { outline:2px solid #9af5f7; outline-offset:3px; }
   </style>
 </head>
 <body>
@@ -1301,20 +1300,20 @@
   </div>
 
 
-  <dialog id="acquisitionDialog" class="acquisition-dialog" aria-labelledby="acquisitionTitle" aria-describedby="acquisitionNote">
-    <form id="acquisitionForm">
-      <h2 id="acquisitionTitle" tabindex="-1">取得日時を修正</h2>
-      <p id="acquisitionSubject" class="acquisition-subject"></p>
-      <div class="acquisition-fields">
-        <label>取得日<input id="acquisitionDate" type="date" required /></label>
-        <label>取得時間<input id="acquisitionTime" type="time" step="60" required /></label>
+  <dialog id="durationDialog" class="duration-dialog" aria-labelledby="durationTitle" aria-describedby="durationNote">
+    <form id="durationForm">
+      <h2 id="durationTitle" tabindex="-1">残り時間を修正</h2>
+      <p id="durationSubject" class="duration-subject"></p>
+      <div class="duration-fields">
+        <label>残り日数（日）<input id="durationDays" type="number" min="0" max="5" step="1" inputmode="numeric" placeholder="例：2" required /></label>
+        <label>残り時間（時間）<input id="durationHours" type="number" min="0" max="23" step="1" inputmode="numeric" placeholder="例：6" required /></label>
       </div>
-      <p id="acquisitionNote" class="acquisition-note">有効期限は取得日時から5日後です。日時は端末のタイムゾーンで表示します。</p>
-      <p id="acquisitionPreview" class="acquisition-preview" aria-live="polite"></p>
-      <p id="acquisitionError" class="acquisition-error" role="alert"></p>
-      <div class="acquisition-actions">
-        <button id="acquisitionCancel" type="button">キャンセル</button>
-        <button id="acquisitionSave" type="submit">保存する</button>
+      <p id="durationNote" class="duration-note">保存した時点から、入力した残り日数・時間で数え直します（最大5日0時間）。変更せずに保存した場合は元の期限を保ちます。</p>
+      <p id="durationPreview" class="duration-preview" aria-live="polite"></p>
+      <p id="durationError" class="duration-error" role="alert"></p>
+      <div class="duration-actions">
+        <button id="durationCancel" type="button">キャンセル</button>
+        <button id="durationSave" type="submit">保存する</button>
       </div>
     </form>
   </dialog>
@@ -1343,7 +1342,7 @@
         <li><strong>表示順：</strong>🥊グローブを持っている人は、一番短い残り時間が近い順に上から表示します。グローブを持っていない人はその下に表示します。</li>
         <li><strong>トップ画面：</strong>名前の下に各アイテムの所持数と、そのアイテムで一番短い残り時間を表示します。</li>
         <li><strong>アイテム編集：</strong>名前またはトップ画面のアイテムをタップすると、中央ポップアップで＋/−できます。</li>
-        <li><strong>取得日時の修正：</strong>名前 → アイテム →「取得日時を修正」で取得日・取得時間を変更し、保存します。有効期限は取得から5日後に更新されます。日時未設定のアイテムにも設定できます。</li>
+        <li><strong>残り時間の修正：</strong>名前 → アイテム →「残り時間を修正」で残り日数・時間を入力し、保存します。保存時点から期限を計算し直します。残り時間が未設定のアイテムにも設定できます。</li>
         <li><strong>残り時間確認：</strong>編集ポップアップ内のアイテム部分をタップすると、同じアイテムを複数持っている場合も1個ずつの残り時間を確認できます。</li>
         <li><strong>「枠内」チェック：</strong>今この配信枠にいる人の名前横にある「枠内」にチェックします。チェックはこの端末だけの一時情報で、再読み込みすると解除されます。</li>
         <li><strong>🥊在席者をコピー：</strong>「枠内」にチェックした人のうち🥊グローブを持っている人だけを抽出し、残り時間が短い順にTikTok LIVEコメント用の短文としてコピーします。</li>
@@ -1780,152 +1779,159 @@
     }
 
 
-    // ACQUISITION_EDITOR_START
-    const acquisitionUi = Object.fromEntries([
-      "Dialog", "Form", "Title", "Subject", "Date", "Time", "Preview", "Error", "Cancel", "Save"
-    ].map(key => [key.toLowerCase(), document.getElementById("acquisition" + key)]));
-    let acquisitionDraft = null;
-    let acquisitionSaving = false;
+    // REMAINING_EDITOR_START
+    const durationUi = Object.fromEntries([
+      "Dialog", "Form", "Title", "Subject", "Days", "Hours", "Preview", "Error", "Cancel", "Save"
+    ].map(key => [key.toLowerCase(), document.getElementById("duration" + key)]));
+    let durationDraft = null;
+    let durationSaving = false;
 
-    function canEditAcquisition() { return true; }
+    function canEditDuration() { return true; }
 
-    function acquisitionFields(timestamp) {
+    function remainingDurationFields(expiresAt, now = Date.now()) {
+      const totalHours = Math.max(0, Math.ceil((Number(expiresAt) - now) / HOUR_MS));
+      return { days:String(Math.floor(totalHours / 24)), hours:String(totalHours % 24) };
+    }
+
+    function formatDurationExpiry(timestamp) {
       const date = new Date(timestamp);
       const pad = value => String(value).padStart(2, "0");
-      return { date: `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`,
-        time: `${pad(date.getHours())}:${pad(date.getMinutes())}` };
+      return `${date.getFullYear()}/${pad(date.getMonth()+1)}/${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
-    function formatAcquisitionDate(timestamp) {
-      const fields = acquisitionFields(timestamp);
-      return `${fields.date.replaceAll("-", "/")} ${fields.time}`;
+    function parseRemainingDuration(days, hours) {
+      if (!/^\d+$/.test(days) || !/^\d+$/.test(hours)) return NaN;
+      const dayCount = Number(days), hourCount = Number(hours);
+      if (!Number.isInteger(dayCount) || dayCount < 0 || dayCount > 5 || !Number.isInteger(hourCount) || hourCount < 0 || hourCount > 23) return NaN;
+      const duration = (dayCount * 24 + hourCount) * HOUR_MS;
+      return duration <= EXPIRATION_MS ? duration : NaN;
     }
 
-    function parseAcquisitionDate(date, time) {
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return NaN;
-      const timestamp = new Date(`${date}T${time}:00`).getTime();
-      if (!Number.isFinite(timestamp)) return NaN;
-      const fields = acquisitionFields(timestamp);
-      return fields.date === date && fields.time === time ? timestamp : NaN;
-    }
-
-    function acquisitionSignature(person, itemKey) {
+    function durationSignature(person, itemKey) {
       return JSON.stringify([Number(person.counts?.[itemKey] || 0), normalizeExpirations(person.expirations)[itemKey]]);
     }
 
-    function buildAcquisitionState(people, draft, acquiredAt, now = Date.now()) {
-      if (!Number.isFinite(acquiredAt) || acquiredAt <= 0 || acquiredAt > now) throw new Error("現在までの正しい取得日時を入力してください。");
+    function buildRemainingState(people, draft, duration, now = Date.now()) {
+      if (!Number.isSafeInteger(duration) || duration < 0 || duration > EXPIRATION_MS || duration % HOUR_MS !== 0) throw new Error("残り日数・時間を0日0時間～5日0時間で入力してください。");
       const next = JSON.parse(JSON.stringify(people));
       const person = next.find(entry => entry.id === draft.personId);
-      if (!person || acquisitionSignature(person, draft.itemKey) !== draft.signature) {
+      if (!person || durationSignature(person, draft.itemKey) !== draft.signature) {
         throw new Error("このアイテムの情報が変わりました。閉じて一覧から選び直してください。");
       }
       const list = normalizeExpirations(person.expirations)[draft.itemKey];
       const count = Number(person.counts[draft.itemKey]);
       if (draft.expiresAt === null) {
-        if (count <= list.length) throw new Error("日時未設定のアイテムがありません。一覧から選び直してください。");
+        if (count <= list.length) throw new Error("残り時間未設定のアイテムがありません。一覧から選び直してください。");
       } else {
         const index = list.indexOf(draft.expiresAt);
         if (index < 0) throw new Error("対象のアイテムが見つかりません。一覧から選び直してください。");
         list.splice(index, 1);
       }
-      const expiresAt = acquiredAt + EXPIRATION_MS;
+      const expiresAt = now + duration;
       if (expiresAt <= now) person.counts[draft.itemKey] = Math.max(0, count - 1);
       else list.push(expiresAt);
       person.expirations = { ...person.expirations, [draft.itemKey]: list.sort((a,b) => a-b) };
       return next.filter(entry => entry.id !== person.id || !isZeroPerson(entry));
     }
 
-    function openAcquisitionEditor(index) {
-      if (!canEditAcquisition() || acquisitionSaving) return;
+    function openDurationEditor(index) {
+      if (!canEditDuration() || durationSaving) return;
       const person = getPersonById(activePersonId);
       const item = ITEMS.find(entry => entry.key === activeRemainingItemKey);
       if (!person || !item || !Number.isInteger(index) || index < 0 || index >= Number(person.counts[item.key])) return;
       const expiresAt = getActiveExpirations(person, item.key).slice(0, Number(person.counts[item.key]))[index] ?? null;
-      const fields = expiresAt === null ? { date:"", time:"" } : acquisitionFields(expiresAt - EXPIRATION_MS);
-      acquisitionDraft = { personId:person.id, itemKey:item.key, expiresAt,
-        signature:acquisitionSignature(person, item.key), fields };
-      acquisitionUi.subject.textContent = `${person.name || "名前未入力"} / ${item.name} / ${index+1}個目`;
-      acquisitionUi.date.value = fields.date;
-      acquisitionUi.date.max = acquisitionFields(Date.now()).date;
-      acquisitionUi.time.value = fields.time;
-      acquisitionUi.error.textContent = "";
-      updateAcquisitionPreview();
-      acquisitionUi.dialog.showModal();
-      acquisitionUi.title.focus();
+      const fields = expiresAt === null ? { days:"", hours:"" } : remainingDurationFields(expiresAt);
+      durationDraft = { personId:person.id, itemKey:item.key, expiresAt,
+        signature:durationSignature(person, item.key), fields };
+      durationUi.subject.textContent = `${person.name || "名前未入力"} / ${item.name} / ${index+1}個目`;
+      durationUi.days.value = fields.days;
+      durationUi.hours.value = fields.hours;
+      durationUi.error.textContent = "";
+      updateDurationPreview();
+      durationUi.dialog.showModal();
+      durationUi.title.focus();
     }
 
-    function updateAcquisitionPreview() {
-      const timestamp = parseAcquisitionDate(acquisitionUi.date.value, acquisitionUi.time.value);
-      const now = Date.now();
-      acquisitionUi.preview.textContent = !Number.isFinite(timestamp) ? "取得日と取得時間を入力してください。"
-        : timestamp > now ? "未来の取得日時は指定できません。"
-        : timestamp + EXPIRATION_MS <= now ? "この日時では期限切れのため、保存すると所持数が1個減ります。"
-        : `有効期限：${formatAcquisitionDate(timestamp + EXPIRATION_MS)}`;
+    function isDurationUnchanged() {
+      return !!durationDraft && durationDraft.expiresAt !== null &&
+        Number(durationUi.days.value) === Number(durationDraft.fields.days) &&
+        Number(durationUi.hours.value) === Number(durationDraft.fields.hours);
     }
 
-    function closeAcquisitionEditor() {
-      if (acquisitionSaving) return;
-      acquisitionUi.dialog.close();
+    function updateDurationPreview() {
+      const duration = parseRemainingDuration(durationUi.days.value, durationUi.hours.value);
+      durationUi.preview.textContent = !Number.isFinite(duration) ? "残り日数・時間を0日0時間～5日0時間で入力してください。"
+        : isDurationUnchanged() ? `現在の有効期限：${formatDurationExpiry(durationDraft.expiresAt)}（変更なし）`
+        : duration === 0 ? "残り0日0時間で保存すると、期限切れとして所持数が1個減ります。"
+        : `保存後の残り：${Number(durationUi.days.value)}日${Number(durationUi.hours.value)}時間 ／ 有効期限の目安：${formatDurationExpiry(Date.now() + duration)}`;
     }
 
-    async function saveAcquisitionEditor(event) {
+    function closeDurationEditor() {
+      if (durationSaving) return;
+      durationUi.dialog.close();
+    }
+
+    async function saveDurationEditor(event) {
       event.preventDefault();
-      if (!acquisitionDraft || acquisitionSaving || !canEditAcquisition()) return;
-      if (!acquisitionUi.form.reportValidity()) return;
-      const draft = acquisitionDraft;
-      const acquiredAt = parseAcquisitionDate(acquisitionUi.date.value, acquisitionUi.time.value);
-      acquisitionUi.error.textContent = "";
-      if (!Number.isFinite(acquiredAt) || acquiredAt <= 0 || acquiredAt > Date.now()) {
-        acquisitionUi.error.textContent = "現在までの正しい取得日時を入力してください。";
+      if (!durationDraft || durationSaving || !canEditDuration()) return;
+      if (!durationUi.form.reportValidity()) return;
+      const draft = durationDraft;
+      const duration = parseRemainingDuration(durationUi.days.value, durationUi.hours.value);
+      durationUi.error.textContent = "";
+      if (!Number.isFinite(duration)) {
+        durationUi.error.textContent = "残り日数・時間を0日0時間～5日0時間で入力してください。";
         return;
       }
       // Opening and saving without edits must not discard stored seconds/milliseconds.
-      if (draft.expiresAt !== null && acquisitionUi.date.value === draft.fields.date && acquisitionUi.time.value === draft.fields.time) {
-        closeAcquisitionEditor();
+      if (isDurationUnchanged()) {
+        closeDurationEditor();
         return;
       }
-      if (acquiredAt + EXPIRATION_MS <= Date.now() && !confirm("この取得日時では期限切れのため、アイテムが1個減ります。保存しますか？")) return;
-      acquisitionSaving = true;
-      acquisitionUi.save.disabled = true;
-      acquisitionUi.cancel.disabled = true;
-      acquisitionUi.save.textContent = "保存中…";
+      if (duration === 0 && !confirm("残り0日0時間にすると、期限切れとしてアイテムが1個減ります。保存しますか？")) return;
+      durationSaving = true;
+      durationUi.save.disabled = true;
+      durationUi.cancel.disabled = true;
+      durationUi.days.disabled = true;
+      durationUi.hours.disabled = true;
+      durationUi.save.textContent = "保存中…";
       try {
         // Read the current local data too, so edits in another tab are detected.
         const latest = normalizePeople(JSON.parse(localStorage.getItem(STORAGE_KEY)));
         if (latest) state = latest;
-        const next = buildAcquisitionState(state, draft, acquiredAt);
+        const next = buildRemainingState(state, draft, duration);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
         state = next;
-        acquisitionUi.dialog.close();
+        durationUi.dialog.close();
         if (activePersonId && !getPersonById(activePersonId)) closeModal({ removeZeroActive:false, renderAfterClose:false });
         renderPeople();
         if (!els.modal.hidden) renderModal();
         if (!els.remainingModal.hidden) renderRemainingModal();
       } catch (error) {
-        acquisitionUi.error.textContent = error.message || "保存できませんでした。通信状態を確認して再度お試しください。";
+        durationUi.error.textContent = error.message || "保存できませんでした。通信状態を確認して再度お試しください。";
       } finally {
-        acquisitionSaving = false;
-        acquisitionUi.save.disabled = false;
-        acquisitionUi.cancel.disabled = false;
-        acquisitionUi.save.textContent = "保存する";
+        durationSaving = false;
+        durationUi.save.disabled = false;
+        durationUi.cancel.disabled = false;
+        durationUi.days.disabled = false;
+        durationUi.hours.disabled = false;
+        durationUi.save.textContent = "保存する";
       }
     }
 
     els.remainingList.addEventListener("click", event => {
-      const button = event.target.closest("[data-edit-acquisition]");
-      if (button && els.remainingList.contains(button)) openAcquisitionEditor(Number(button.dataset.editAcquisition));
+      const button = event.target.closest("[data-edit-duration]");
+      if (button && els.remainingList.contains(button)) openDurationEditor(Number(button.dataset.editDuration));
     });
-    acquisitionUi.form.addEventListener("submit", saveAcquisitionEditor);
-    acquisitionUi.date.addEventListener("input", updateAcquisitionPreview);
-    acquisitionUi.time.addEventListener("input", updateAcquisitionPreview);
-    acquisitionUi.cancel.addEventListener("click", closeAcquisitionEditor);
-    acquisitionUi.dialog.addEventListener("cancel", event => { if (acquisitionSaving) event.preventDefault(); });
-    acquisitionUi.dialog.addEventListener("close", () => {
-      acquisitionDraft = null;
+    durationUi.form.addEventListener("submit", saveDurationEditor);
+    durationUi.days.addEventListener("input", updateDurationPreview);
+    durationUi.hours.addEventListener("input", updateDurationPreview);
+    durationUi.cancel.addEventListener("click", closeDurationEditor);
+    durationUi.dialog.addEventListener("cancel", event => { if (durationSaving) event.preventDefault(); });
+    durationUi.dialog.addEventListener("close", () => {
+      durationDraft = null;
       if (!els.remainingModal.hidden) els.remainingClose.focus();
     });
-    // ACQUISITION_EDITOR_END
+    // REMAINING_EDITOR_END
 
     function renderRemainingModal() {
       const person = getPersonById(activePersonId);
@@ -1944,15 +1950,15 @@
         <div class="remaining-preview-icon ${iconClass(item)}" aria-hidden="true">${iconContent(item)}</div>
         <div class="remaining-preview-main">
           <div class="remaining-preview-count">所持数：${count}個</div>
-          <div class="remaining-preview-note">取得日時と残り時間です。一番上が一番古いアイテムです。${canEditAcquisition() ? "取得日時は1個ずつ修正できます。" : ""}</div>
+          <div class="remaining-preview-note">1個ごとの残り時間です。期限が近い順に表示しています。${canEditDuration() ? "残り日数・時間は1個ずつ修正できます。" : ""}</div>
         </div>
       `;
 
       const rows = activeExpirations.map((expiresAt, index) => `
         <div class="remaining-row">
           <span class="remaining-index">${index + 1}個目</span>
-          <span class="remaining-time">${formatRemainingTime(expiresAt)}<br><small>${formatExpireDateTime(expiresAt)}</small><span class="remaining-acquired">取得：${formatAcquisitionDate(expiresAt - EXPIRATION_MS)}</span></span>
-          ${canEditAcquisition() ? `<button class="acquisition-edit" type="button" data-edit-acquisition="${index}">取得日時を修正</button>` : ""}
+          <span class="remaining-time">${formatRemainingTime(expiresAt)}<br><small>${formatExpireDateTime(expiresAt)}</small></span>
+          ${canEditDuration() ? `<button class="duration-edit" type="button" data-edit-duration="${index}">残り時間を修正</button>` : ""}
         </div>
       `);
 
@@ -1961,7 +1967,7 @@
           <div class="remaining-row">
             <span class="remaining-index">${activeExpirations.length + index + 1}個目</span>
             <span class="remaining-time">期限データなし<br><small>改修前の個数など</small></span>
-            ${canEditAcquisition() ? `<button class="acquisition-edit" type="button" data-edit-acquisition="${activeExpirations.length + index}">取得日時を設定</button>` : ""}
+            ${canEditDuration() ? `<button class="duration-edit" type="button" data-edit-duration="${activeExpirations.length + index}">残り時間を設定</button>` : ""}
           </div>
         `);
       }
@@ -2696,7 +2702,7 @@
 
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
-      if (acquisitionUi.dialog.open) return;
+      if (durationUi.dialog.open) return;
       if (!els.shareModal.hidden) {
         closeShareModal();
         return;
@@ -2736,7 +2742,7 @@
     renderPeople();
 
     setInterval(() => {
-      if (acquisitionSaving) return;
+      if (durationSaving) return;
       processExpiredIncrements();
       renderPeople();
       if (!els.modal.hidden) renderModal();
