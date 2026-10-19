@@ -1,43 +1,49 @@
 'use strict';
 
 const MastersMissionProgress = (() => {
-  const STORAGE_KEY = 'masters-2026-10-mission-progress-v1';
+  const STORAGE_KEY = 'masters-2026-10-mission-progress-v2';
+  const LEGACY_STORAGE_KEY = 'masters-2026-10-mission-progress-v1';
   const LIMIT = 141;
   const isDaily = gift => gift.type === 'デイリー';
   const dayKey = (now = Date.now()) => new Date(now + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const validCount = (count, gift) => Number.isInteger(count) && count >= 0 && count <= gift.target;
+  const totalTarget = gift => gift.target * (isDaily(gift) ? 3 : 1);
+  const countUnit = gift => gift.unit === '名' ? '名分' : gift.unit;
+  const validCount = (count, maximum) => Number.isInteger(count) && count >= 0 && count <= maximum;
 
   function restore(gifts, raw, now = Date.now()) {
     let saved;
     try { saved = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { saved = null; }
     const day = dayKey(now);
-    const state = { version: 1, day, missions: {} };
+    const state = { version: 2, day, missions: {} };
     for (const gift of gifts) {
       const rounds = isDaily(gift) ? 3 : 1;
-      const prior = saved?.version === 1 && (!isDaily(gift) || saved.day === day) ? saved.missions?.[gift.id] : null;
-      state.missions[gift.id] = {
-        round: Number.isInteger(prior?.round) && prior.round >= 1 && prior.round <= rounds ? prior.round : 1,
-        counts: Array.from({ length: rounds }, (_, i) => validCount(prior?.counts?.[i], gift) ? prior.counts[i] : 0)
-      };
+      const prior = (!isDaily(gift) || saved?.day === day) ? saved?.missions?.[gift.id] : null;
+      let count = 0;
+      if (saved?.version === 2 && validCount(prior?.count, totalTarget(gift))) count = prior.count;
+      if (saved?.version === 1) {
+        // Migrate the explicitly entered counts, without inventing unrecorded progress.
+        count = Array.from({ length: rounds }, (_, i) => validCount(prior?.counts?.[i], gift.target) ? prior.counts[i] : 0).reduce((sum, value) => sum + value, 0);
+      }
+      state.missions[gift.id] = { count };
     }
     return state;
   }
 
   function remaining(gift, entry) {
-    const count = entry?.counts?.[entry.round - 1];
-    if (!validCount(count, gift)) throw new Error('進捗の入力値が不正です。');
-    return gift.target - count;
+    const count = entry?.count;
+    if (!validCount(count, totalTarget(gift))) throw new Error('進捗の入力値が不正です。');
+    return totalTarget(gift) - count;
   }
 
   function comment(gifts, state, individual = false) {
     const pending = gifts.filter(gift => remaining(gift, state.missions[gift.id]) > 0);
-    const roundLabel = gift => isDaily(gift) ? `（${state.missions[gift.id].round}回目）` : '';
     if (!pending.length) {
+      const scope = gifts.every(isDaily) ? 'デイリーミッション' : gifts.every(gift => !isDaily(gift)) ? '期間限定ギフトミッション' : 'ギフトミッション';
       return individual && gifts.length === 1
-        ? `【マスターズ】${gifts[0].name}${roundLabel(gifts[0])}達成！ありがとうございます！`
-        : '【マスターズ】今回のミッション達成！応援ありがとうございます！';
+        ? `【マスターズ】${gifts[0].name} 全達成！ありがとうございます！`
+        : `【マスターズ】${scope}全達成！応援ありがとうございます！`;
     }
-    return '【マスターズ】' + pending.map(gift => `${gift.name} あと${remaining(gift, state.missions[gift.id])}${gift.unit}${roundLabel(gift)}`).join('／') + ' 応援お願いします！';
+    return '【マスターズ】全達成まで ' + pending.map(gift => `${gift.name} あと${remaining(gift, state.missions[gift.id])}${countUnit(gift)}`).join('／') + ' 応援お願いします！';
   }
 
   async function copyText(text, navigatorObject, documentObject, textarea) {
@@ -59,7 +65,7 @@ const MastersMissionProgress = (() => {
   function mount(root, gifts) {
     let storage;
     let raw = null;
-    try { storage = window.localStorage; raw = storage.getItem(STORAGE_KEY); } catch { storage = null; }
+    try { storage = window.localStorage; raw = storage.getItem(STORAGE_KEY) ?? storage.getItem(LEGACY_STORAGE_KEY); } catch { storage = null; }
     let state = restore(gifts, raw);
     let group = 'daily';
     const invalid = new Set();
@@ -69,7 +75,7 @@ const MastersMissionProgress = (() => {
         <button type="button" data-progress-group="period" aria-pressed="false">期間限定</button>
         <button type="button" data-progress-group="all" aria-pressed="false">全6種</button>
       </div>
-      <p class="progress-help">今回の達成数を入力。ポーンは人数（名）です。<br>達成後は「何回目」を切り替えて、次の回を入力できます。</p>
+      <p class="progress-help">デイリーは1日3回分、期間限定は期間中の合計を入力。<br>ポーンは各回の達成人数を足した延べ人数です。</p>
       <div class="progress-rows" id="progress-rows"></div>
       <div class="progress-copy-panel">
         <label for="progress-comment">コピーするコメント <span id="progress-length"></span></label>
@@ -110,20 +116,20 @@ const MastersMissionProgress = (() => {
       if (!row) return;
       const error = invalid.has(gift.id);
       const count = error ? null : remaining(gift, state.missions[gift.id]);
-      row.querySelector('output').textContent = error ? '入力を確認' : count === 0 ? '達成！' : `あと${count}${gift.unit}`;
+      row.querySelector('output').textContent = error ? '入力を確認' : count === 0 ? '全達成！' : `あと${count}${countUnit(gift)}`;
       row.querySelector('output').classList.toggle('is-complete', count === 0);
       row.querySelector('[data-progress-copy]').disabled = error;
       row.querySelector('[data-progress-count]').setAttribute('aria-invalid', String(error));
-      row.querySelector('.progress-error').textContent = error ? `0〜${gift.target}の整数で入力してください。` : '';
+      row.querySelector('.progress-error').textContent = error ? `0〜${totalTarget(gift)}の整数で入力してください。` : '';
     }
 
     function renderRows() {
       rows.innerHTML = currentGifts().map(gift => {
         const entry = state.missions[gift.id];
         return `<article class="progress-row" data-progress-row="${gift.id}">
-          <div class="progress-row-heading"><h2>${gift.name}</h2>${isDaily(gift) ? `<label class="progress-round-label">何回目<select data-progress-round="${gift.id}" aria-label="${gift.name}の挑戦回数">${[1, 2, 3].map(round => `<option value="${round}"${round === entry.round ? ' selected' : ''}>${round}回目</option>`).join('')}</select></label>` : '<span class="progress-period-label">期間中1回</span>'}</div>
+          <div class="progress-row-heading"><h2>${gift.name}</h2><span class="progress-period-label">${isDaily(gift) ? 'デイリー合計' : '期間中合計'}</span></div>
           <div class="progress-row-controls">
-            <label class="progress-count-label" for="progress-count-${gift.id}"><span>今回の達成数</span><span class="progress-number"><input id="progress-count-${gift.id}" data-progress-count="${gift.id}" type="number" inputmode="numeric" min="0" max="${gift.target}" step="1" value="${entry.counts[entry.round - 1]}" aria-label="${gift.name}の今回の達成数（${gift.unit}）" aria-describedby="progress-error-${gift.id}"><span>/ ${gift.target}${gift.unit}</span></span></label>
+            <label class="progress-count-label" for="progress-count-${gift.id}"><span>合計の達成数</span><span class="progress-number"><input id="progress-count-${gift.id}" data-progress-count="${gift.id}" type="number" inputmode="numeric" min="0" max="${totalTarget(gift)}" step="1" value="${entry.count}" aria-label="${gift.name}の合計達成数（${countUnit(gift)}）" aria-describedby="progress-error-${gift.id}"><span>/ ${totalTarget(gift)}${countUnit(gift)}</span></span></label>
             <output for="progress-count-${gift.id}" aria-live="off"></output>
             <button type="button" data-progress-copy="${gift.id}" aria-label="${gift.name}の残数をコピー">コピー</button>
           </div><p id="progress-error-${gift.id}" class="progress-error"></p>
@@ -160,26 +166,13 @@ const MastersMissionProgress = (() => {
       if (!input || refresh()) return;
       const gift = gifts.find(item => item.id === input.dataset.progressCount);
       const value = input.value.trim();
-      if (/^\d+$/.test(value) && validCount(Number(value), gift)) {
+      if (/^\d+$/.test(value) && validCount(Number(value), totalTarget(gift))) {
         invalid.delete(gift.id);
-        const entry = state.missions[gift.id];
-        entry.counts[entry.round - 1] = Number(value);
+        state.missions[gift.id].count = Number(value);
         save();
       } else invalid.add(gift.id);
       updateRow(gift);
       updatePreview();
-    });
-    rows.addEventListener('change', event => {
-      const select = event.target.closest('[data-progress-round]');
-      if (!select || refresh()) return;
-      const id = select.dataset.progressRound;
-      const round = Number(select.value);
-      if (![1, 2, 3].includes(round)) return;
-      state.missions[id].round = round;
-      invalid.delete(id);
-      save();
-      renderRows();
-      rows.querySelector(`[data-progress-round="${id}"]`).focus({ preventScroll: true });
     });
     root.addEventListener('click', event => {
       const filter = event.target.closest('[data-progress-group]');
@@ -213,7 +206,7 @@ const MastersMissionProgress = (() => {
     };
   }
 
-  return { restore, remaining, comment, dayKey, copyText, mount, LIMIT };
+  return { restore, remaining, comment, dayKey, totalTarget, copyText, mount, LIMIT };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = MastersMissionProgress;
