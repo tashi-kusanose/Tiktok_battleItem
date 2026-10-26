@@ -5,6 +5,7 @@ const allowedPages = new Map([
   ['community-boost-2026', 'community-boost/'],
   ['king-of-stage-2026', 'king-of-stage/'],
   ['music-stage-2026', 'music-stage/'],
+  ['fandom-october-2026', 'fandom/'],
 ]);
 
 export function validateCatalog(rows) {
