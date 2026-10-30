@@ -1,0 +1,5 @@
+{"type":"roomInfo","data":{"id":"9000000000000000001"}}
+{"messages":[{"type":"WebcastChatMessage","data":{"common":{"roomId":"9000000000000000001","msgId":"9000000000000000101"},"user":{"id":"9000000000000000011","nickname":"検証用ユーザーA"},"comment":"これは架空のテストデータです"}},{"type":"WebcastGiftMessage","data":{"common":{"roomId":"9000000000000000001","msgId":"9000000000000000102"},"user":{"id":"9000000000000000011"},"giftId":1,"repeatCount":1,"repeatEnd":false}}]}
+{"type":"WebcastGiftMessage","data":{"common":{"roomId":"9000000000000000001","msgId":"9000000000000000103"},"user":{"id":"9000000000000000011"},"giftId":1,"repeatCount":5,"repeatEnd":true}}
+{"type":"WebcastGiftMessage","data":{"common":{"roomId":"9000000000000000001","msgId":"9000000000000000103"},"user":{"id":"9000000000000000011"},"giftId":1,"repeatCount":5,"repeatEnd":true}}
+{"type":"WebcastBoostCardMessage","data":{"common":{"roomId":"9000000000000000001","msgId":"9000000000000000104"},"fixtureOnly":true}}
