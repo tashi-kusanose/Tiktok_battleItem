@@ -1,6 +1,7 @@
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.mjs';
 
 const allowedPages = new Map([
+  ['masters-yearend-2026', 'masters-yearend-2026/'],
   ['masters-october-2026', 'masters/'],
   ['community-boost-2026', 'community-boost/'],
   ['king-of-stage-2026', 'king-of-stage/'],
@@ -45,7 +46,7 @@ async function refreshCatalog() {
     const main = document.querySelector('main');
     const banners = new Map([...main.querySelectorAll('[data-event]')]
       .map(element => [element.dataset.event, element]));
-    for (const banner of banners.values()) banner.hidden = true;
+    for (const banner of banners.values()) banner.hidden = banner.dataset.static !== 'true';
     for (const row of rows) {
       const banner = banners.get(row.slug);
       if (!banner) continue;

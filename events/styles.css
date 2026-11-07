@@ -246,3 +246,37 @@ main { gap: 14px; }
 }
 
 .fandom{--edge:#53808a80;--arrow:#e0c28a;--arrow-bg:#102d35ee;background:#122e35;color:#fff}.fandom-art{right:0;top:0;width:58%;height:100%;opacity:.85}.fandom:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#122e35 12%,#122e35ee 35%,#122e3540 65%,transparent)}.fandom .eyebrow{color:#c2ad82}.fandom-title{margin:13px 0;line-height:.95;font-style:italic;letter-spacing:-1.5px}.fandom-title small{display:block;font-size:20px;letter-spacing:2px;margin-bottom:5px}.fandom-title>span{font-size:clamp(34px,6.9vw,56px);font-weight:900}.fandom-title sup{font-size:.6em;color:#dfc28c}.fandom .caption{color:#c4d3d2;font-size:10px}.banner{height:clamp(144px,calc((100svh - var(--pad-top) - var(--pad-bottom) - 72px)/5),208px)}@media(max-width:600px){.fandom-art{width:65%;right:-8%}.fandom-title>span{font-size:clamp(29px,8vw,40px)}.fandom-title small{font-size:15px}.fandom .caption{font-size:8px}.fandom-title{margin:13px 0}.banner{height:clamp(140px,calc((100svh - var(--pad-top) - var(--pad-bottom) - 56px)/5),190px)}}
+
+
+/* 2026 year-end event: independent featured banner; originals remain unchanged. */
+.yearend{--edge:#b98b608c;--arrow:#ffdfab;--arrow-bg:#210f12eb;background:radial-gradient(ellipse at 82% 40%,#ba834e4d,transparent 32%),linear-gradient(125deg,#261813 0%,#100d0d 53%,#551b2a 100%);color:#fff4db}
+.yearend:before{content:"";position:absolute;z-index:1;inset:0;pointer-events:none;background:linear-gradient(0deg,#820e3452,transparent 46%),repeating-linear-gradient(95deg,transparent 0 58px,#f2b86a07 59px 60px)}
+.yearend .banner-copy{position:relative;z-index:2}
+.yearend .eyebrow{color:#dfbd89;font-size:9px}
+.yearend-title{margin:8px 0 6px;line-height:1;letter-spacing:-.7px}
+.yearend-title span{display:block;font:900 clamp(27px,5vw,45px) Georgia,serif;color:#f6d59a}
+.yearend-title strong{display:block;font:800 clamp(15px,3vw,24px) Georgia,serif;letter-spacing:1.1px;color:#fce7b8}
+.yearend .caption{color:#f0c6a0;font-size:10px;letter-spacing:1.2px}
+.yearend-mark{position:absolute;z-index:0;right:12%;top:-23%;font:normal clamp(118px,19vw,210px)/1 Georgia,serif;color:#c3915b99;text-shadow:0 0 32px #9c5c2d80;transform:rotate(-12deg)}
+/* Compact six-card index, retaining existing banner styling and layout. */
+main{gap:10px}.banner{height:clamp(105px,calc((100svh - var(--pad-top) - var(--pad-bottom) - 50px) / 6),175px)}
+@media(max-width:600px){
+ main{gap:8px}
+ .banner{height:clamp(102px,calc((100svh - var(--pad-top) - var(--pad-bottom) - 40px) / 6),165px)}
+ .yearend-title{margin:7px 0 5px}
+ .yearend-title span{font-size:clamp(24px,6.4vw,33px)}
+ .yearend-title strong{font-size:clamp(13px,3.4vw,18px);letter-spacing:.7px}
+ .yearend .caption{font-size:8px;letter-spacing:.5px}
+ .yearend-mark{right:1%;top:-24%;font-size:clamp(119px,30vw,170px)}
+ .masters-title{margin:6px 0}
+ .masters-title>span{font-size:clamp(25px,7vw,36px)}
+ .masters-title small{margin-top:5px;font-size:8px}
+ .community-title{margin:6px 0}
+ .community-title span{font-size:clamp(21px,5.9vw,29px)}
+ .community-title strong{font-size:clamp(29px,8vw,39px)}
+ .king-title{margin:6px 0}.king-title span{font-size:clamp(24px,6.5vw,30px)}
+ .music-title{margin:6px 0}.music-title span{font-size:clamp(26px,7vw,35px)}
+ .fandom-title{margin:6px 0}.fandom-title>span{font-size:clamp(25px,7vw,35px)}
+ .fandom-title small{font-size:12px;margin-bottom:3px}
+}
+@media(max-height:720px) and (max-width:600px){body{--pad-top:12px;--pad-bottom:12px;padding:12px}.banner{height:clamp(88px,calc((100svh - 72px)/6),115px)}.banner-copy{padding-top:6px;padding-bottom:6px}.open-arrow{width:24px;height:24px;right:11px;bottom:9px}.banner .caption{font-size:7px}}
